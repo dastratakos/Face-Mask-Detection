@@ -16,12 +16,6 @@ for root, dirnames, filenames in os.walk("/foo/bar"):
 import os
 import pprint
 import xml.etree.ElementTree as ET
-import matplotlib.pyplot as plt
-# import torch
-# from torchvision import datasets, transforms
-# import helper
-
-# from scipy import ndimage, misc
 
 def parseXML(xml_filename):
     """ This function generates an annotation dictionary representation of
@@ -48,19 +42,6 @@ def parseXML(xml_filename):
             annotation[item.tag] = item.text             
     return annotation
 
-# def format_images(data_dir):
-#     # apply transforms
-#     train_transforms = transforms.Compose([
-#                                     transforms.RandomRotation(30),
-#                                     transforms.RandomResizedCrop(224),
-#                                     transforms.RandomHorizontalFlip(),
-#                                     transforms.ToTensor()])
-#     train_data = datasets.ImageFolder(data_dir, transform=train_transforms)                                       
-
-#     # load data
-#     trainloader = torch.utils.data.DataLoader(train_data, batch_size=32)
-#     return trainloader
-
 def single_file_test():
     """ Tests the parseXML function for a single XML file.
     """
@@ -69,22 +50,21 @@ def single_file_test():
     annotation = parseXML('./archive/annotations/maksssksksss0.xml')
     pp.pprint(annotation)
 
-    # image = format_image('./archive/images/maksssksksss0.png')
-    # print(image)
-
 def main():
     """ Collects all of the images and annotations from the ./archive/ directory.
     Converts the annotation XML files to a list of dictionaries.
     """
     
-    imgs = list(sorted(os.listdir('./archive/images/'), key=lambda x: int(x[12:-4])))
+    image_bases = list(sorted(os.listdir('./archive/images/'), key=lambda x: int(x[12:-4])))
     annotations = list(sorted(os.listdir('./archive/annotations/'), key=lambda x: int(x[12:-4])))
-    assert len(imgs) == len(annotations), f'Number of images ({len(imgs)}) does not match the number of annotations ({len(annotations)})'
+    assert len(image_bases) == len(annotations), f'Number of images ({len(image_bases)}) does not match the number of annotations ({len(annotations)})'
     
-    print(f'The dataset contains {len(imgs)} data points')
+    print(f'The dataset contains {len(image_bases)} data points')
     annotations = [parseXML('./archive/annotations/' + annotation) for annotation in annotations]
 
+    return image_bases, annotations
+
 if __name__ == '__main__':
-    # main()
-    single_file_test()
+    main()
+    # single_file_test()
     
