@@ -12,10 +12,9 @@ from PIL import Image
 
 from tqdm import tqdm
 
+from config import ARCHIVE_ROOT, IMAGE_ROOT
 import preprocess
 
-ARCHIVE_ROOT = './archive/'
-IMAGE_ROOT = f'{ARCHIVE_ROOT}images/'
 CROPPED_IMAGE_ROOT = f'{ARCHIVE_ROOT}cropped_images/'
 CSV_FILE = f'{ARCHIVE_ROOT}cropped_labels.csv'
 SCALE = 1.5
@@ -26,25 +25,25 @@ NEW_LABELS = {
     'mask_weared_incorrect': 'incorrect'
     }
 
-def compute_crop_box(bounding_box):
+def compute_crop_box(bound_box):
     """Computes the coordinates to crop an image based on the provided
-    bounding_box and the SCALE variable. The input only describes a box around
+    bound_box and the SCALE variable. The input only describes a box around
     the mask (or area where the mask would be), and the width and height could
     could be different. The output box will be a square and contain a larger
     portion of the face.
 
     Args:
-        bounding_box (Dictionary): Describes the original shape of the bounding
-            box.
+        bound_box (Dictionary): Describes the original shape of the bounding
+            box. The dimensions can be a rectangle (not a square).
     """
-    x_max, x_min, y_max, y_min = [int(v)
-                                    for _, v in sorted(bounding_box.items())]
+    x_max, x_min, y_max, y_min = [int(v) for _, v in sorted(bound_box.items())]
 
     # compute half of the side of the scaled box to crop    
     width = x_max - x_min
     height = y_max - y_min
     half_side = SCALE / 2 * max(width, height)
 
+    # find the (x, y) center of the box
     x_center = (x_max + x_min) / 2
     y_center = (y_max + y_min) / 2
     

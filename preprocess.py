@@ -1,21 +1,16 @@
 """
 file: preprocess.py
 -------------------
-Parses XML files and formats images.
-
-See below for more information on loading images using PyTorch
-https://medium.com/secure-and-private-ai-writing-challenge/loading-image-using-pytorch-c2e2dcce6ef2
-
-NOTE: another option for parsing XML files
-from bs4 import BeautifulSoup
-NOTE: another way to crawl through a directory
-for root, dirnames, filenames in os.walk("/foo/bar"):
-        for filename in filenames:
-            if re.search("\.(jpg|jpeg|png|bmp|tiff)$", filename):
+Parses XML files.
 """
 import os
 import pprint
 import xml.etree.ElementTree as ET
+
+from config import ARCHIVE_ROOT, IMAGE_ROOT, ANNOTATION_ROOT
+
+CROPPED_IMAGE_ROOT = f'{ARCHIVE_ROOT}cropped_images/'
+CSV_FILE = f'{ARCHIVE_ROOT}cropped_labels.csv'
 
 def parseXML(xml_filename):
     """ This function generates an annotation dictionary representation of
@@ -25,7 +20,7 @@ def parseXML(xml_filename):
         xml_filename (String): Relative path to the XML file
 
     Returns:
-        Dictionary: Dictionary representation of the entire XML file
+        annotation (Dictionary): Fepresentation of the entire XML file
     """
     tree = ET.parse(xml_filename)
     root = tree.getroot()
@@ -47,20 +42,30 @@ def single_file_test():
     """
     pp = pprint.PrettyPrinter(indent=4)
 
-    annotation = parseXML('./archive/annotations/maksssksksss0.xml')
+    annotation = parseXML(f'{ANNOTATION_ROOT}maksssksksss0.xml')
     pp.pprint(annotation)
 
 def main():
-    """ Collects all of the images and annotations from the ./archive/ directory.
+    """ Collects all of the images and annotations from the archive directory.
     Converts the annotation XML files to a list of dictionaries.
+
+    Returns:
+        image_bases ([String]): List of the filenames for all images
+        annotations ([Dictionary]): List of the parsed annotations
     """
-    
-    image_bases = list(sorted(os.listdir('./archive/images/'), key=lambda x: int(x[12:-4])))
-    annotations = list(sorted(os.listdir('./archive/annotations/'), key=lambda x: int(x[12:-4])))
-    assert len(image_bases) == len(annotations), f'Number of images ({len(image_bases)}) does not match the number of annotations ({len(annotations)})'
+
+    # sort by the image id (i.e. maksssksksss[id].png)
+    image_bases = list(sorted(os.listdir(IMAGE_ROOT),
+                              key=lambda x: int(x[12:-4])))
+    annotations = list(sorted(os.listdir(ANNOTATION_ROOT),
+                              key=lambda x: int(x[12:-4])))
+    assert len(image_bases) == len(annotations), \
+        f'Number of images ({len(image_bases)}) does not match the number of \
+        annotations ({len(annotations)})'
     
     print(f'The dataset contains {len(image_bases)} data points')
-    annotations = [parseXML('./archive/annotations/' + annotation) for annotation in annotations]
+    annotations = [parseXML(f'{ANNOTATION_ROOT}{annotation}')
+                    for annotation in annotations]
 
     return image_bases, annotations
 
