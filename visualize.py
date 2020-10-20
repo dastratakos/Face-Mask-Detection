@@ -24,7 +24,17 @@ COLORS = {
     'without_mask': 'red'
     }
 
-def visualize_image(image_base, annotation, interactive=False):
+def visualize_image(image_base: str, annotation: dict, interactive: bool=False):
+    """ Creates a new image by drawing the bounding boxes from the annotation
+    in one of three colors.
+
+    Args:
+        image_base (str): The base filename of the image
+        annotation (dict): The corresponding annotation
+        interactive (bool, optional): If true, the new image will be shown as a
+            pop-up. Execution will be paused until the pop-up window is closed.
+            Defaults to False.
+    """
     image = np.array(Image.open(f'{IMAGE_ROOT}{image_base}'), dtype=np.uint8)
     fig, ax = plt.subplots(1)
     ax.imshow(image)

@@ -12,10 +12,9 @@ from PIL import Image
 
 from tqdm import tqdm
 
-from config import ARCHIVE_ROOT, IMAGE_ROOT
+from config import ARCHIVE_ROOT, IMAGE_ROOT, CROPPED_IMAGE_ROOT
 import preprocess
 
-CROPPED_IMAGE_ROOT = f'{ARCHIVE_ROOT}cropped_images/'
 CSV_FILE = f'{ARCHIVE_ROOT}cropped_labels.csv'
 SCALE = 1.5
 DIM = 64
@@ -25,7 +24,7 @@ NEW_LABELS = {
     'mask_weared_incorrect': 'incorrect'
     }
 
-def compute_crop_box(bound_box):
+def compute_crop_box(bound_box: dict):
     """Computes the coordinates to crop an image based on the provided
     bound_box and the SCALE variable. The input only describes a box around
     the mask (or area where the mask would be), and the width and height could
@@ -33,7 +32,7 @@ def compute_crop_box(bound_box):
     portion of the face.
 
     Args:
-        bound_box (Dictionary): Describes the original shape of the bounding
+        bound_box (dict): Describes the original shape of the bounding
             box. The dimensions can be a rectangle (not a square).
     """
     x_max, x_min, y_max, y_min = [int(v) for _, v in sorted(bound_box.items())]
@@ -54,7 +53,7 @@ def compute_crop_box(bound_box):
 
     return((left, top, right, bottom))
 
-def get_label(label):
+def get_label(label: str) -> str:
     if label in NEW_LABELS:
         return NEW_LABELS[label]
     else:

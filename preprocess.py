@@ -9,18 +9,15 @@ import xml.etree.ElementTree as ET
 
 from config import ARCHIVE_ROOT, IMAGE_ROOT, ANNOTATION_ROOT
 
-CROPPED_IMAGE_ROOT = f'{ARCHIVE_ROOT}cropped_images/'
-CSV_FILE = f'{ARCHIVE_ROOT}cropped_labels.csv'
-
-def parseXML(xml_filename):
+def parseXML(xml_filename: str) -> dict:
     """ This function generates an annotation dictionary representation of
     the contents of the specified XML filename.
 
     Args:
-        xml_filename (String): Relative path to the XML file
+        xml_filename (str): Relative path to the XML file
 
     Returns:
-        annotation (Dictionary): Fepresentation of the entire XML file
+        annotation (dict): Fepresentation of the entire XML file
     """
     tree = ET.parse(xml_filename)
     root = tree.getroot()
@@ -50,8 +47,8 @@ def main():
     Converts the annotation XML files to a list of dictionaries.
 
     Returns:
-        image_bases ([String]): List of the filenames for all images
-        annotations ([Dictionary]): List of the parsed annotations
+        image_bases ([str]): List of the filenames for all images
+        annotations ([dict]): List of the parsed annotations
     """
 
     # sort by the image id (i.e. maksssksksss[id].png)
