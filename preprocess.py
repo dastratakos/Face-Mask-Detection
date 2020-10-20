@@ -17,9 +17,9 @@ import os
 import pprint
 import xml.etree.ElementTree as ET
 import matplotlib.pyplot as plt
-import torch
-from torchvision import datasets, transforms
-import helper
+# import torch
+# from torchvision import datasets, transforms
+# import helper
 
 # from scipy import ndimage, misc
 
@@ -48,18 +48,18 @@ def parseXML(xml_filename):
             annotation[item.tag] = item.text             
     return annotation
 
-def format_images(data_dir):
-    # apply transforms
-    train_transforms = transforms.Compose([
-                                    transforms.RandomRotation(30),
-                                    transforms.RandomResizedCrop(224),
-                                    transforms.RandomHorizontalFlip(),
-                                    transforms.ToTensor()])
-    train_data = datasets.ImageFolder(data_dir, transform=train_transforms)                                       
+# def format_images(data_dir):
+#     # apply transforms
+#     train_transforms = transforms.Compose([
+#                                     transforms.RandomRotation(30),
+#                                     transforms.RandomResizedCrop(224),
+#                                     transforms.RandomHorizontalFlip(),
+#                                     transforms.ToTensor()])
+#     train_data = datasets.ImageFolder(data_dir, transform=train_transforms)                                       
 
-    # load data
-    trainloader = torch.utils.data.DataLoader(train_data, batch_size=32)
-    return trainloader
+#     # load data
+#     trainloader = torch.utils.data.DataLoader(train_data, batch_size=32)
+#     return trainloader
 
 def single_file_test():
     """ Tests the parseXML function for a single XML file.
@@ -67,11 +67,10 @@ def single_file_test():
     pp = pprint.PrettyPrinter(indent=4)
 
     annotation = parseXML('./archive/annotations/maksssksksss0.xml')
-    print('=' * 30)
     pp.pprint(annotation)
 
-    image = format_image('./archive/images/maksssksksss0.png')
-    print(image)
+    # image = format_image('./archive/images/maksssksksss0.png')
+    # print(image)
 
 def main():
     """ Collects all of the images and annotations from the ./archive/ directory.
