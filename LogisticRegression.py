@@ -1,6 +1,7 @@
 import numpy as np
 import torch as tor
 import collections
+from sklearn.linear_model import LogisticRegression
 
 RGB_GRANULARITY = 32
 TOTAL_RGB = 256
@@ -49,16 +50,28 @@ def Classify(validation_x_points, thetas):
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    x_points, y_points = GenerateRandomData(RANDOM_DATA_NUM_POINTS, IMAGE_WIDTH, IMAGE_HEIGHT)
-    thetas = LearnPredictor(x_points, y_points, FeatureExtractor, 10000, 0.02, 1e-5)
-    val_x_points, val_y_points = GenerateRandomData(RANDOM_DATA_NUM_POINTS, IMAGE_WIDTH, IMAGE_HEIGHT)
-    preds = Classify(val_x_points, thetas)
-    correct = 0
-    for i in range(len(preds)):
-        if preds[i] >= 0.5:
-            if val_y_points[i] == 1:
-                correct += 1
-        else:
-            if val_y_points[i] == 0:
-                correct += 1
-    print("Num correct: " + str(correct/len(preds)))
+    # x_points, y_points = GenerateRandomData(RANDOM_DATA_NUM_POINTS, IMAGE_WIDTH, IMAGE_HEIGHT)
+    # thetas = LearnPredictor(x_points, y_points, FeatureExtractor, 10000, 0.02, 1e-5)
+    # val_x_points, val_y_points = GenerateRandomData(RANDOM_DATA_NUM_POINTS, IMAGE_WIDTH, IMAGE_HEIGHT)
+    # preds = Classify(val_x_points, thetas)
+    # correct = 0
+    # for i in range(len(preds)):
+    #     if preds[i] >= 0.5:
+    #         if val_y_points[i] == 1:
+    #             correct += 1
+    #     else:
+    #         if val_y_points[i] == 0:
+    #             correct += 1
+    # print("Num correct: " + str(correct/len(preds)))
+
+    # placeholder data
+    x_train = [[0, 0], [1, 1]]
+    y_train = [0, 1]
+    x_val = [[2, 2]]
+    y_val = [[1]]
+
+    clf = LogisticRegression()
+    clf.fit(x_train, y_train)
+    score = clf.score(x_val, y_val)
+    print("Score is", score)
+    print("Accuracy is", score / len(y_val))
