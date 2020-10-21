@@ -7,7 +7,7 @@ import os
 import pprint
 import xml.etree.ElementTree as ET
 
-from config import ARCHIVE_ROOT, IMAGE_ROOT, ANNOTATION_ROOT
+from config import IMAGE_ROOT, ANNOTATION_ROOT
 
 def parseXML(xml_filename: str) -> dict:
     """ This function generates an annotation dictionary representation of

@@ -6,12 +6,12 @@ of the box depends on the class of the annotation.
 
 It should take around two and a half minutes to process 833 images.
 """
+import os
 
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 from PIL import Image
 import numpy as np
-
 from tqdm import tqdm
 
 from config import ARCHIVE_ROOT, IMAGE_ROOT, ANNOTATION_ROOT
@@ -58,6 +58,8 @@ def visualize_image(image_base: str, annotation: dict, interactive: bool=False):
     plt.close()
 
 if __name__ == '__main__':
+    os.makedirs(f'{ARCHIVE_ROOT}visualizations', exist_ok=True)
+
     image_bases, annotations = preprocess.main()
     with tqdm(total=len(image_bases)) as progress_bar:
         for image_base, annotation in zip(image_bases, annotations):
