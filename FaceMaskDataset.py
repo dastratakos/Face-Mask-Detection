@@ -24,8 +24,8 @@ https://pytorch.org/tutorials/beginner/data_loading_tutorial.html
 #         return len(self.images)
 
 #     def __getitem__(self, idx):
-#         image_filename = f'{IMAGE_ROOT}maksssksksss' + str(idx) + '.png'
-#         label_filename = f'{ANNOTATION_ROOT}maksssksksss' + str(idx) + '.xml'        
+#         image_filename = IMAGE_ROOT + f'maksssksksss{idx}.png'
+#         label_filename = ANNOTATION_ROOT + f'maksssksksss{idx}.xml'        
 #         image = Image.open(image_filename)
 #         label = parseXML(label_filename)
 
