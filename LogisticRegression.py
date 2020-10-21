@@ -1,7 +1,14 @@
+import os
+import csv
+import collections
+
 import numpy as np
 import torch as tor
-import collections
 from sklearn.linear_model import LogisticRegression
+from sklearn.model_selection import train_test_split
+
+from config import ARCHIVE_ROOT, CROPPED_IMAGE_ROOT
+from simpleimage import SimpleImage
 
 RGB_GRANULARITY = 32
 TOTAL_RGB = 256
@@ -64,14 +71,46 @@ if __name__ == '__main__':
     #             correct += 1
     # print("Num correct: " + str(correct/len(preds)))
 
-    # placeholder data
-    x_train = [[0, 0], [1, 1]]
-    y_train = [0, 1]
-    x_val = [[2, 2]]
-    y_val = [[1]]
+    X = []
+    labels = []
+    
+    image_bases = list(sorted(os.listdir(CROPPED_IMAGE_ROOT),
+                              key=lambda x: int(x[5:-4])))
+
+    with open(ARCHIVE_ROOT + 'cropped_labels.csv') as f:
+        labels = [line for line in csv.reader(f)][1:]
+        labels = [[int(line[0]), line[1]] for line in labels]
+        print(f'y has {len(labels)} elements')
+        print(f'y[0] = {labels[0]}')
+    
+    num_examples = 1000
+    y = []
+    index = 0
+    for label in labels:
+        if label[1] == "no mask": y.append(0)
+        elif label[1] == "mask": y.append(1)
+        else: y.append(2)
+
+    y = y[:num_examples]
+
+    index = 0
+    for image_base in image_bases:
+        image = SimpleImage(CROPPED_IMAGE_ROOT + image_base)
+        X.append([((pixel.red + pixel.green + pixel.blue) // 3) for pixel in image])
+        index += 1
+        if index >= num_examples: break
+
+    # # placeholder data
+    # # x_train = [[0, 0], [1, 1]]
+    # # y_train = [0, 1]
+    # # x_val = [[2, 2]]
+    # # y_val = [[1]]
+
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.1, random_state=42)
 
     clf = LogisticRegression()
-    clf.fit(x_train, y_train)
-    score = clf.score(x_val, y_val)
+    clf.fit(X_train, y_train)
+    score = clf.score(X_test, y_test)
+    predictions = clf.predict(X_test)
+    print(predictions)
     print("Score is", score)
-    print("Accuracy is", score / len(y_val))
