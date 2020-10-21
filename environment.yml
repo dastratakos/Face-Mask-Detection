@@ -7,3 +7,6 @@ dependencies:
   - pip=10.0.1
   - python=3.6.6
   - scipy
+  - Pillow
+  - tqdm
+  - scikit-image
