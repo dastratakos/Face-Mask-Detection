@@ -148,6 +148,21 @@ npm install
 <!-- USAGE EXAMPLES -->
 ## Usage
 
+1. Download dataset from Kaggle.
+2. Set up `virtualenv`.
+3. Crop the images.
+```
+python crop.py
+```
+4. Run data augmentation
+```
+python augment.py
+```
+5. Run the pipeline.
+```
+python run_pipeline.py
+```
+
 Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
 
 _For more examples, please refer to the [Documentation](https://example.com)_

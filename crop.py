@@ -7,22 +7,23 @@ incorrect) are stored in a CSV file.
 
 It should take just over 30 seconds to process 853 images.
 """
+import argparse
 import csv
 import os
 
 from PIL import Image
 from tqdm import tqdm
 
-from config import ARCHIVE_ROOT, IMAGE_ROOT, CROPPED_IMAGE_ROOT
+from config import ARCHIVE_ROOT, IMAGE_ROOT, CROPPED_IMAGE_ROOT, build_description
 import preprocess
 
-CSV_FILE = f'{ARCHIVE_ROOT}cropped_labels.csv'
+CSV_FILE = ARCHIVE_ROOT + 'cropped_labels.csv'
 SCALE = 1.5
 DIM = 64
 NEW_LABELS = {
-    'without_mask': 'no mask',
-    'with_mask': 'mask',
-    'mask_weared_incorrect': 'incorrect'
+    'without_mask': 0,
+    'with_mask': 1,
+    'mask_weared_incorrect': 2
     }
 
 def compute_crop_box(bound_box: dict):
@@ -61,25 +62,28 @@ def get_label(label: str) -> str:
         raise ValueError(f"Unknown label category: {label}")
 
 def main():
-    os.makedirs(f'{ARCHIVE_ROOT}cropped', exist_ok=True)
+    os.makedirs(ARCHIVE_ROOT + 'cropped', exist_ok=True)
 
     image_bases, annotations = preprocess.main()
-    id = 0
 
     with open(CSV_FILE, 'w') as f:
         csv_file = csv.writer(f)
-        csv_file.writerow(['id', 'label'])
+        csv_file.writerow(['image id', 'face_id', 'label'])
         print(f'Finding faces in {len(image_bases)} images')
         with tqdm(total=len(image_bases)) as progress_bar:
-            for image_base, annotation in zip(image_bases, annotations):
-                im = Image.open(f'{IMAGE_ROOT}{image_base}')
-                for object in annotation['objects']:
+            for image_id, (image_base, annotation) in enumerate(zip(image_bases, annotations)):
+                im = Image.open(IMAGE_ROOT + image_base)
+                for face_id, object in enumerate(annotation['objects']):
                     crop_box = compute_crop_box(object['bndbox'])
                     cropped_image = im.crop(crop_box).resize((DIM, DIM))
-                    cropped_image.save(f'{CROPPED_IMAGE_ROOT}image{id}.png')
-                    csv_file.writerow([id, get_label(object['name'])])
-                    id += 1
+                    cropped_image.save(CROPPED_IMAGE_ROOT +
+                                        f'image-{image_id}-{face_id}.png')
+                    csv_file.writerow([image_id, face_id, get_label(object['name'])])
                 progress_bar.update()
 
 if __name__ == '__main__':
+    arg_parser = argparse.ArgumentParser(
+        description=build_description('Image cropping module'),
+        formatter_class=argparse.RawTextHelpFormatter)
+
     main()

@@ -4,7 +4,7 @@ file: augment.py
 Increases the size of the dataset by performing data augmentation. The factor
 by which the dataset increases is specified by the FACTOR variable.
 
-This should take around 1 minute per additional factor for 833 images.
+This should take around 1 minute per additional factor for 853 images.
 
 Reference:
     https://www.kaggle.com/tomahim/image-manipulation-augmentation-with-skimage
@@ -31,12 +31,12 @@ train on images with inverted colors.
     - translation
     - color inversion
 
-TODO:
-    - create new label CSV
-    - investigate low contrast images
+NOTE: There is a risk of creating low contrast images if too many
+transformations are applied, or if gamma correction is used.
 """
+import argparse
+import csv
 import os
-from os import pread
 import random
 
 import numpy as np
@@ -45,13 +45,15 @@ from scipy.ndimage import uniform_filter
 from skimage import io
 from skimage.transform import rotate, warp, AffineTransform
 from skimage.util import random_noise, img_as_ubyte
-from skimage.color import rgb2gray
+from skimage.color import rgb2gray, rgba2rgb
 from skimage.exposure import rescale_intensity
 from skimage.exposure import adjust_gamma, adjust_log, adjust_sigmoid
 from tqdm import tqdm
 
-from config import ARCHIVE_ROOT, CROPPED_IMAGE_ROOT, AUGMENTED_IMAGE_ROOT
+from config import ARCHIVE_ROOT, CROPPED_IMAGE_ROOT, AUGMENTED_IMAGE_ROOT, build_description
+import preprocess
 
+CSV_FILE = ARCHIVE_ROOT + 'augmented_labels.csv'
 FACTOR = 3
 
 def random_rotation(image: ndarray):
@@ -67,7 +69,7 @@ def flip_vertical(image: ndarray):
     return image[::-1, :]
 
 def gray_scale(image: ndarray):
-    return img_as_ubyte(rgb2gray(image))
+    return img_as_ubyte(rgb2gray(rgba2rgb(image)))
 
 def change_contrast(image: ndarray):
     v_min, v_max = np.percentile(image, (0.2, 99.8))
@@ -92,49 +94,82 @@ TRANSFORMATIONS = [
     random_rotation,
     add_noise,
     flip_horizontal,
-    # flip_vertical,# NOTE: Does it make sense to flip a face upside-down?
-    # gray_scale,   # NOTE: Makes each [R,G,B] into a single element (not compatible)
     change_contrast,
-    gamma_correction,
     log_correction,
-    sigmoid_correction,
-    # blur,         # NOTE: The images are already pretty blury at 64x64
     shear
 ]
+UNUSED = [
+    flip_vertical,        # NOTE: Irrelevant to flip a face upside-down
+    gray_scale,           # NOTE: Reduces each [R,G,B] into a single number
+    gamma_correction,     # NOTE: Makes the image too bright
+    sigmoid_correction,   # NOTE: Makes the image too dark
+    blur                  # NOTE: The images are already a bit blury at 64x64
+]
 
-def test_all_transformations():
-    AUGMENTED_IMAGE_TEST_ROOT = f'{ARCHIVE_ROOT}augmented_test/'
+def test_all_transformations(image_base):
+    AUGMENTED_IMAGE_TEST_ROOT = ARCHIVE_ROOT + 'augmented_test/'
     os.makedirs(AUGMENTED_IMAGE_TEST_ROOT, exist_ok=True)
 
-    image_base = 'image1.png'
-    augmented_base = f'{AUGMENTED_IMAGE_TEST_ROOT}{image_base[:-4]}'
-    
-    im = io.imread(f'{CROPPED_IMAGE_ROOT}{image_base}')
+    augmented_base = AUGMENTED_IMAGE_TEST_ROOT + image_base[:-4]
+
+    im = io.imread(CROPPED_IMAGE_ROOT + image_base)
     io.imsave(f'{augmented_base}-original.png', im)
-    for transformation in TRANSFORMATIONS:
+    
+    all_transformations = TRANSFORMATIONS + UNUSED
+    print(f'Applying {len(all_transformations)} transformations')
+    for transformation in tqdm(all_transformations):
         im2 = transformation(im)
         name = transformation.__name__
         io.imsave(f'{augmented_base}-{name}.png', im2)
 
 def main():
-    os.makedirs(f'{ARCHIVE_ROOT}augmented', exist_ok=True)
+    os.makedirs(ARCHIVE_ROOT + 'augmented', exist_ok=True)
 
-    # sort by the image id (i.e. image[id].png)
+    # labels = {'[image id]-[face id]': label for each line}
+    with open(ARCHIVE_ROOT + 'cropped_labels.csv') as f:
+        labels = {f'{line[0]}-{line[1]}': int(line[2])
+                    for line in csv.reader(f) if line[0].isnumeric()}
+
+    # sort by the image id, then face id (i.e. image-[image id]-[face id].png)
     image_bases = list(sorted(os.listdir(CROPPED_IMAGE_ROOT),
-                              key=lambda x: int(x[5:-4])))
-    with tqdm(total=len(image_bases)) as progress_bar:
-        for image_base in image_bases:
-            augmented_base = f'{AUGMENTED_IMAGE_ROOT}{image_base[:-4]}'
-            im = io.imread(f'{CROPPED_IMAGE_ROOT}{image_base}')
-            io.imsave(f'{augmented_base}-0.png', im)
-            for i in range(1, FACTOR):
-                num_transformations = random.randint(1, len(TRANSFORMATIONS))
-                for _ in range(num_transformations):
-                    transform = random.choice(TRANSFORMATIONS)
-                    im = transform(im)
-                io.imsave(f'{augmented_base}-{i}.png', im)
-            progress_bar.update()
+                                key=lambda x: (int(x[:-4].split('-')[1]),
+                                               int(x[:-4].split('-')[2]))))
+
+    with open(CSV_FILE, 'w') as f:
+        csv_file = csv.writer(f)
+        csv_file.writerow(['image id', 'face_id', 'augment_id', 'label'])
+        print(f'Augmenting {len(image_bases)} images')
+        with tqdm(total=len(image_bases)) as progress_bar:
+            for image_base in image_bases:
+                image_id, face_id = (int(image_base[:-4].split('-')[1]),
+                                     int(image_base[:-4].split('-')[2]))
+                label = labels[f'{image_id}-{face_id}']
+                augmented_base = AUGMENTED_IMAGE_ROOT + image_base[:-4]
+
+                im = io.imread(CROPPED_IMAGE_ROOT + image_base)
+                io.imsave(f'{augmented_base}-0.png', im)
+                csv_file.writerow([image_id, face_id, 0, label])
+                for augment_id in range(1, FACTOR):
+                    num_transformations = random.randint(1, 3)
+                    im2 = im
+                    for _ in range(num_transformations):
+                        transform = random.choice(TRANSFORMATIONS)
+                        im2 = transform(im2)
+                    io.imsave(f'{augmented_base}-{augment_id}.png', im2)
+                    csv_file.writerow([image_id, face_id, augment_id, label])
+                progress_bar.update()
 
 if __name__ == '__main__':
-    main()
-    # test_all_transformations()
+    arg_parser = argparse.ArgumentParser(
+        description=build_description('Data augmentation module'),
+        formatter_class=argparse.RawTextHelpFormatter)
+    arg_parser.add_argument("-t", "--test",
+        help="run a test of all transformations",
+        action="store_true")
+    arg_parser.add_argument("-f", "--file",
+        help="image file name to run tests on",
+        default='image-22-0.png')
+    args = arg_parser.parse_args()
+
+    if args.test: test_all_transformations(args.file)
+    else: main()

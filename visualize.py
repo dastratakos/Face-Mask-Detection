@@ -4,8 +4,9 @@ file: visualize.py
 Visualizes images by drawing boxes to represent annotations. The color
 of the box depends on the class of the annotation.
 
-It should take around two and a half minutes to process 833 images.
+It should take around two and a half minutes to process 853 images.
 """
+import argparse
 import os
 
 import matplotlib.pyplot as plt
@@ -14,28 +15,32 @@ from PIL import Image
 import numpy as np
 from tqdm import tqdm
 
-from config import ARCHIVE_ROOT, IMAGE_ROOT, ANNOTATION_ROOT
+from config import ARCHIVE_ROOT, IMAGE_ROOT, ANNOTATION_ROOT, build_description
 import preprocess
 
-VISUALIZATION_ROOT = f'{ARCHIVE_ROOT}visualizations/'
+VISUALIZATION_ROOT = ARCHIVE_ROOT + 'visualizations/'
 COLORS = {
     'with_mask': 'lime',
     'mask_weared_incorrect': 'yellow',
     'without_mask': 'red'
     }
 
-def visualize_image(image_base: str, annotation: dict, interactive: bool=False):
+def visualize_image(image_id: int, interactive: bool=False):
     """ Creates a new image by drawing the bounding boxes from the annotation
     in one of three colors.
 
     Args:
-        image_base (str): The base filename of the image
-        annotation (dict): The corresponding annotation
+        image_id (int): The id of the image to visualize
         interactive (bool, optional): If true, the new image will be shown as a
             pop-up. Execution will be paused until the pop-up window is closed.
             Defaults to False.
     """
-    image = np.array(Image.open(f'{IMAGE_ROOT}{image_base}'), dtype=np.uint8)
+    image = np.array(
+        Image.open(IMAGE_ROOT + f'maksssksksss{image_id}.png'),
+        dtype=np.uint8)
+    annotation = preprocess.parseXML(
+        ANNOTATION_ROOT + f'maksssksksss{image_id}.xml')
+    
     fig, ax = plt.subplots(1)
     ax.imshow(image)
 
@@ -51,17 +56,29 @@ def visualize_image(image_base: str, annotation: dict, interactive: bool=False):
             facecolor='none')
         ax.add_patch(rect)
 
-    id = int(image_base[12:-4])          # image id (i.e. maksssksksss[id].png)
-    plt.title(f'Image {id}')
+    plt.title(f'Image {image_id}')
     if interactive: plt.show()
-    else: fig.savefig(f'{VISUALIZATION_ROOT}image' + str(id) + '.png')
+    else: fig.savefig(VISUALIZATION_ROOT + f'image-{image_id}.png')
     plt.close()
 
-if __name__ == '__main__':
-    os.makedirs(f'{ARCHIVE_ROOT}visualizations', exist_ok=True)
+def main():
+    os.makedirs(ARCHIVE_ROOT + 'visualizations/', exist_ok=True)
 
-    image_bases, annotations = preprocess.main()
-    with tqdm(total=len(image_bases)) as progress_bar:
-        for image_base, annotation in zip(image_bases, annotations):
-            visualize_image(image_base, annotation)
-            progress_bar.update()
+    for index in tqdm(range(preprocess.get_num_images())):
+        visualize_image(index)
+
+if __name__ == '__main__':
+    arg_parser = argparse.ArgumentParser(
+        description=build_description('Image visualization module'),
+        formatter_class=argparse.RawTextHelpFormatter)
+    arg_parser.add_argument("-t", "--test",
+        help="visualize a single image",
+        action="store_true")
+    arg_parser.add_argument("-i", "--image_id",
+        help="id of the image to visualize",
+        type=int,
+        default=0)
+    args = arg_parser.parse_args()
+
+    if args.test: visualize_image(args.image_id, interactive=True)
+    else: main()
