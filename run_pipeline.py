@@ -3,6 +3,9 @@ import argparse
 from config import build_description
 import preprocess
 
+import LogisticRegression
+import svm
+
 def parse_args() -> dict:
     """ Parse the input arguments """
     arg_parser = argparse.ArgumentParser(
@@ -36,6 +39,11 @@ def parse_args() -> dict:
 def main():
     args = parse_args()
     preprocess.main()
+
+    if args.model == 1:
+        LogisticRegression.LogReg()
+    elif args.model == 2:
+        svm.SVM()
 
 if __name__ == '__main__':
     main()
