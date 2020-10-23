@@ -11,13 +11,13 @@ https://pytorch.org/tutorials/beginner/data_loading_tutorial.html
 # from torch.utils.data import Dataset
 
 # from config import IMAGE_ROOT, ANNOTATION_ROOT
-# from preprocess import parseXML
+# from data_processing.preprocess import parseXML
+# from utils import util
 
 # class FaceMaskDataset(Dataset):
 #     def __init__(self, images, root_dir, transform=None):
 #         self.images = images
-#         self.images = list(sorted(os.listdir(IMAGE_ROOT),
-#                                 key=lambda x: int(x[12:-4])))
+#         self.images = util.get_image_bases(IMAGE_ROOT)
 #         self.transform = transform
 
 #     def __len__(self):

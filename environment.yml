@@ -10,3 +10,5 @@ dependencies:
   - Pillow
   - tqdm
   - scikit-image
+  - torch
+  - sklearn

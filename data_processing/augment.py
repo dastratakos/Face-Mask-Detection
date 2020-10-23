@@ -36,6 +36,7 @@ transformations are applied, or if gamma correction is used.
 """
 import argparse
 import csv
+import logging
 import os
 import random
 
@@ -50,8 +51,8 @@ from skimage.exposure import rescale_intensity
 from skimage.exposure import adjust_gamma, adjust_log, adjust_sigmoid
 from tqdm import tqdm
 
-from config import ARCHIVE_ROOT, CROPPED_IMAGE_ROOT, AUGMENTED_IMAGE_ROOT, build_description
-import preprocess
+from config import ARCHIVE_ROOT, CROPPED_IMAGE_ROOT, AUGMENTED_IMAGE_ROOT, FORMAT
+from utils import util
 
 CSV_FILE = ARCHIVE_ROOT + 'augmented_labels.csv'
 FACTOR = 3
@@ -116,13 +117,15 @@ def test_all_transformations(image_base):
     io.imsave(f'{augmented_base}-original.png', im)
     
     all_transformations = TRANSFORMATIONS + UNUSED
-    print(f'Applying {len(all_transformations)} transformations')
+    logging.info(f'Applying {len(all_transformations)} transformations')
     for transformation in tqdm(all_transformations):
         im2 = transformation(im)
         name = transformation.__name__
         io.imsave(f'{augmented_base}-{name}.png', im2)
 
 def main():
+    logging.basicConfig(format=FORMAT, level=logging.INFO)
+    logging.info('========== Support Vector Machine ==========')
     os.makedirs(ARCHIVE_ROOT + 'augmented', exist_ok=True)
 
     # labels = {'[image id]-[face id]': label for each line}
@@ -130,15 +133,12 @@ def main():
         labels = {f'{line[0]}-{line[1]}': int(line[2])
                     for line in csv.reader(f) if line[0].isnumeric()}
 
-    # sort by the image id, then face id (i.e. image-[image id]-[face id].png)
-    image_bases = list(sorted(os.listdir(CROPPED_IMAGE_ROOT),
-                                key=lambda x: (int(x[:-4].split('-')[1]),
-                                               int(x[:-4].split('-')[2]))))
+    image_bases = util.get_image_bases(CROPPED_IMAGE_ROOT)
 
     with open(CSV_FILE, 'w') as f:
         csv_file = csv.writer(f)
         csv_file.writerow(['image id', 'face_id', 'augment_id', 'label'])
-        print(f'Augmenting {len(image_bases)} images')
+        logging.info(f'Augmenting {len(image_bases)} images')
         with tqdm(total=len(image_bases)) as progress_bar:
             for image_base in image_bases:
                 image_id, face_id = (int(image_base[:-4].split('-')[1]),
@@ -161,13 +161,13 @@ def main():
 
 if __name__ == '__main__':
     arg_parser = argparse.ArgumentParser(
-        description=build_description('Data augmentation module'),
+        description=util.build_description('Data augmentation module'),
         formatter_class=argparse.RawTextHelpFormatter)
-    arg_parser.add_argument("-t", "--test",
-        help="run a test of all transformations",
-        action="store_true")
-    arg_parser.add_argument("-f", "--file",
-        help="image file name to run tests on",
+    arg_parser.add_argument('-t', '--test',
+        help='run a test of all transformations',
+        action='store_true')
+    arg_parser.add_argument('-f', '--file',
+        help='image file name to run tests on',
         default='image-22-0.png')
     args = arg_parser.parse_args()
 
