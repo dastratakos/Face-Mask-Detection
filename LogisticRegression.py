@@ -6,8 +6,11 @@ import numpy as np
 import torch as tor
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import train_test_split
+from sklearn.metrics import balanced_accuracy_score
+from sklearn.pipeline import make_pipeline
+from sklearn.preprocessing import StandardScaler
 
-from config import ARCHIVE_ROOT, CROPPED_IMAGE_ROOT
+from config import ARCHIVE_ROOT, CROPPED_IMAGE_ROOT, AUGMENTED_IMAGE_ROOT
 from simpleimage import SimpleImage
 
 RGB_GRANULARITY = 32
@@ -44,10 +47,10 @@ def LearnPredictor(x_points, y_points, FE, numIters, eta, eps):
                 return thetas
     return thetas
 
-def GenerateRandomData(numPoints, imageWidth, imageHeight):
-    x_points = tor.randint(TOTAL_RGB, (numPoints, imageWidth * imageHeight, 3))
-    y_points = tor.randint(2, (numPoints,))
-    return np.array(x_points), np.array(y_points)
+# def GenerateRandomData(numPoints, imageWidth, imageHeight):
+#     x_points = tor.randint(TOTAL_RGB, (numPoints, imageWidth * imageHeight, 3))
+#     y_points = tor.randint(2, (numPoints,))
+#     return np.array(x_points), np.array(y_points)
 
 def Classify(validation_x_points, thetas):
     predictions = np.zeros(len(validation_x_points))
@@ -55,22 +58,21 @@ def Classify(validation_x_points, thetas):
         predictions[i] = 1 / (1 + np.exp(-np.dot(thetas.T, FeatureExtractor(validation_x_points[i]))))
     return predictions
 
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    # x_points, y_points = GenerateRandomData(RANDOM_DATA_NUM_POINTS, IMAGE_WIDTH, IMAGE_HEIGHT)
-    # thetas = LearnPredictor(x_points, y_points, FeatureExtractor, 10000, 0.02, 1e-5)
-    # val_x_points, val_y_points = GenerateRandomData(RANDOM_DATA_NUM_POINTS, IMAGE_WIDTH, IMAGE_HEIGHT)
-    # preds = Classify(val_x_points, thetas)
-    # correct = 0
-    # for i in range(len(preds)):
-    #     if preds[i] >= 0.5:
-    #         if val_y_points[i] == 1:
-    #             correct += 1
-    #     else:
-    #         if val_y_points[i] == 0:
-    #             correct += 1
-    # print("Num correct: " + str(correct/len(preds)))
+# x_points, y_points = GenerateRandomData(RANDOM_DATA_NUM_POINTS, IMAGE_WIDTH, IMAGE_HEIGHT)
+# thetas = LearnPredictor(x_points, y_points, FeatureExtractor, 10000, 0.02, 1e-5)
+# val_x_points, val_y_points = GenerateRandomData(RANDOM_DATA_NUM_POINTS, IMAGE_WIDTH, IMAGE_HEIGHT)
+# preds = Classify(val_x_points, thetas)
+# correct = 0
+# for i in range(len(preds)):
+#     if preds[i] >= 0.5:
+#         if val_y_points[i] == 1:
+#             correct += 1
+#     else:
+#         if val_y_points[i] == 0:
+#             correct += 1
+# print("Num correct: " + str(correct/len(preds)))
 
+def LogReg():
     X = []
     labels = []
     
@@ -81,11 +83,9 @@ if __name__ == '__main__':
         labels = [line for line in csv.reader(f)][1:]
         labels = [[int(line[0]), line[1]] for line in labels]
         print(f'y has {len(labels)} elements')
-        print(f'y[0] = {labels[0]}')
     
-    num_examples = 1000
+    num_examples = len(labels)
     y = []
-    index = 0
     for label in labels:
         if label[1] == "no mask": y.append(0)
         elif label[1] == "mask": y.append(1)
@@ -100,17 +100,9 @@ if __name__ == '__main__':
         index += 1
         if index >= num_examples: break
 
-    # # placeholder data
-    # # x_train = [[0, 0], [1, 1]]
-    # # y_train = [0, 1]
-    # # x_val = [[2, 2]]
-    # # y_val = [[1]]
-
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.1, random_state=42)
 
-    clf = LogisticRegression()
+    clf = make_pipeline(StandardScaler(), LogisticRegression(max_iter=100000))
     clf.fit(X_train, y_train)
-    score = clf.score(X_test, y_test)
-    predictions = clf.predict(X_test)
-    print(predictions)
-    print("Score is", score)
+    print("Logistic Regression Score is", clf.score(X_test, y_test))
+    print("Logistic Regression Balanced Score is", balanced_accuracy_score(y_test, clf.predict(X_test)))
