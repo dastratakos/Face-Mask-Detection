@@ -9,9 +9,9 @@ def loadDataset(img_directory):
     )
     return face_mask_dataset
 
-def splitGroups(dataset):
+def splitGroups(dataset, train_split):
     dataset_size = tf.data.experimental.cardinality(dataset)
-    train_size = int(0.9 * dataset_size)
+    train_size = int(train_split * dataset_size)
 
     dataset = dataset.shuffle()
     train_dataset = dataset.take(train_size)
