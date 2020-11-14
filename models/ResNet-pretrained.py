@@ -32,7 +32,7 @@ x = tf.keras.applications.resnet.preprocess_input(x)  # ResNet50 input preproces
 
 x = base_model(x, training=False)
 x = keras.layers.GlobalAveragePooling2D()(x)
-x = keras.layers.Dropout(0.2)(x)
+x = keras.layers.Dropout(0.5)(x)
 x = keras.layers.Dense(3)(x)
 outputs = keras.layers.Activation('softmax')(x)
 
