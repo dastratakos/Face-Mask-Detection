@@ -4,6 +4,13 @@
 import numpy as np
 import tensorflow as tf
 from tensorflow import keras
+from keras_load_dataset import loadDataset, splitGroups
+
+dataset_directory = ""
+train_split = 0.9
+
+face_mask_dataset = loadDataset(dataset_directory)
+train_set, test_set = splitGroups(face_mask_dataset, train_split)
 
 data_augmentation = keras.Sequential(
     [
