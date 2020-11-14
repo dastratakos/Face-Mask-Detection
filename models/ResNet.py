@@ -14,18 +14,17 @@ data_augmentation = keras.Sequential(
 
 IMG_HEIGHT = 150
 IMG_WIDTH = 150
-IMG_DEPTH = 3
 
 base_model = tf.keras.applications.ResNet50(
     include_top=False,  # don't include fully-connected layer on top so we can build and train our own
     weights="imagenet",
-    input_shape=(IMG_HEIGHT, IMG_WIDTH, IMG_DEPTH),
+    input_shape=(IMG_HEIGHT, IMG_WIDTH, 3),
 )
 
 # Freeze base_model
 base_model.trainable = False
 
-inputs = keras.Input(shape=(IMG_HEIGHT, IMG_WIDTH, IMG_DEPTH))
+inputs = keras.Input(shape=(IMG_HEIGHT, IMG_WIDTH, 3))
 x = data_augmentation(inputs)  # optional data augmentation
 
 x = tf.keras.applications.resnet.preprocess_input(x)  # ResNet50 input preprocessing
