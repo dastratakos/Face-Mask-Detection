@@ -32,9 +32,10 @@ base_model = tf.keras.applications.ResNet50(
 base_model.trainable = False
 
 inputs = keras.Input(shape=(IMG_HEIGHT, IMG_WIDTH, 3))
-random_uniform_tensor = tf.keras.backend.random_uniform(shape=(IMG_HEIGHT, IMG_WIDTH, 3), minval=0.0, maxval=1.0)
-# x = data_augmentation(inputs)  # optional data augmentation
-x = inputs
+# random_uniform_tensor = tf.keras.backend.random_uniform(shape=(IMG_HEIGHT, IMG_WIDTH, 3), minval=0.0, maxval=1.0)
+
+x = data_augmentation(inputs)  # optional data augmentation
+# x = inputs
 
 x = tf.keras.applications.resnet.preprocess_input(x)  # ResNet50 input preprocessing
 
@@ -47,4 +48,15 @@ outputs = keras.layers.Activation('softmax')(x)
 model = keras.Model(inputs, outputs)
 
 print(model.summary())
-print(model.predict(np.array([random_uniform_tensor])))
+# print(model.predict(np.array([random_uniform_tensor])))
+
+lr = 1e-5
+model.compile(
+    optimizer=keras.optimizers.Adam(lr),
+    loss=tf.keras.losses.SparseCategoricalCrossentropy(),
+    metrics=[tf.keras.metrics.Accuracy()]
+)
+
+epochs = 10
+model.fit(train_set, epochs=epochs, validation_split=0.2)
+print(model.evaluate(test_set))
