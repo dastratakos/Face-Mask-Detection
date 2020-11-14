@@ -12,30 +12,24 @@ data_augmentation = keras.Sequential(
     ]
 )
 
-IMG_HEIGHT = 150
-IMG_WIDTH = 150
-
-base_model = tf.keras.applications.ResNet50(
-    include_top=False,  # don't include fully-connected layer on top so we can build and train our own
-    weights="imagenet",
-    input_shape=(IMG_HEIGHT, IMG_WIDTH, 3),
-)
-
-# Freeze base_model
-base_model.trainable = False
+IMG_HEIGHT = 64
+IMG_WIDTH = 64
 
 inputs = keras.Input(shape=(IMG_HEIGHT, IMG_WIDTH, 3))
+
+base_model = tf.keras.applications.ResNet50(
+    include_top=True,
+    weights=None,
+    classes=3
+)
+
+# Don't freeze base_model
+base_model.trainable = True
+
 # x = data_augmentation(inputs)  # optional data augmentation
 x = inputs
-
 x = tf.keras.applications.resnet.preprocess_input(x)  # ResNet50 input preprocessing
-
-x = base_model(x, training=False)
-x = keras.layers.GlobalAveragePooling2D()(x)
-x = keras.layers.Dropout(0.2)(x)
-x = keras.layers.Dense(3)(x)
-outputs = keras.layers.Activation('softmax')(x)
-
+outputs = base_model(x, training=False)
 model = keras.Model(inputs, outputs)
 
 print(model.summary())
