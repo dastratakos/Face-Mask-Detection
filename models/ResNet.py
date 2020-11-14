@@ -25,7 +25,8 @@ base_model = tf.keras.applications.ResNet50(
 base_model.trainable = False
 
 inputs = keras.Input(shape=(IMG_HEIGHT, IMG_WIDTH, 3))
-x = data_augmentation(inputs)  # optional data augmentation
+# x = data_augmentation(inputs)  # optional data augmentation
+x = inputs
 
 x = tf.keras.applications.resnet.preprocess_input(x)  # ResNet50 input preprocessing
 
