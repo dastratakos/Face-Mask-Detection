@@ -84,8 +84,6 @@ def main():
     """
 
     # sort by the image id (i.e. maksssksksss[image id].png)
-    createImageClassesFolder()
-    input()
     image_bases = list(sorted(os.listdir(IMAGE_ROOT),
                               key=lambda x: int(x[12:-4])))
     annotations = list(sorted(os.listdir(ANNOTATION_ROOT),
