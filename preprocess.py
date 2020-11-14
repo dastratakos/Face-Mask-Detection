@@ -6,9 +6,38 @@ Parses XML files.
 import argparse
 import os
 import pprint
+import csv
+import pandas
+import shutil
 import xml.etree.ElementTree as ET
 
-from config import IMAGE_ROOT, ANNOTATION_ROOT, build_description
+from config import IMAGE_ROOT, ANNOTATION_ROOT, build_description, CROPPED_IMAGE_ROOT, \
+    NUM_CLASSES_IN_MODEL, CROPPED_CLASS_ROOT, ARCHIVE_ROOT
+
+def createImageClassesFolder():
+    """
+    From the CROPPED_IMAGE_ROOT, this function generates
+    a set of directories that contain all the images for
+    masked people, unmasked people, and people wearing masks incorrect
+    :return: A folder with n subfolders, where n is the number of classes in
+    the ML model and each subfolder contains all the images for the given class.
+    """
+    if not os.path.isdir(CROPPED_CLASS_ROOT): os.mkdir(CROPPED_CLASS_ROOT)
+    for class_num in range(NUM_CLASSES_IN_MODEL):
+        path = CROPPED_CLASS_ROOT + "class_" + str(class_num) + '/'
+        if not os.path.isdir(path): os.mkdir(path)
+    labels = pandas.read_csv(ARCHIVE_ROOT + 'cropped_labels.csv')
+    files = sorted(os.listdir(CROPPED_IMAGE_ROOT))
+    for i in range(len(files)):
+        image_num = int(files[i][files[i].find('e') + 1: files[i].find('.')])
+        if labels['label'][image_num] == 'mask':
+            shutil.copy(CROPPED_IMAGE_ROOT + files[i], CROPPED_CLASS_ROOT + 'class_0')
+        elif labels['label'][image_num] == 'no mask':
+            shutil.copy(CROPPED_IMAGE_ROOT + files[i], CROPPED_CLASS_ROOT + 'class_1')
+        else:
+            shutil.copy(CROPPED_IMAGE_ROOT + files[i], CROPPED_CLASS_ROOT + 'class_2')
+
+
 
 def parseXML(xml_filename: str) -> dict:
     """ This function generates an annotation dictionary representation of
@@ -55,6 +84,8 @@ def main():
     """
 
     # sort by the image id (i.e. maksssksksss[image id].png)
+    createImageClassesFolder()
+    input()
     image_bases = list(sorted(os.listdir(IMAGE_ROOT),
                               key=lambda x: int(x[12:-4])))
     annotations = list(sorted(os.listdir(ANNOTATION_ROOT),
