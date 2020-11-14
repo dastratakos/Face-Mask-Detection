@@ -12,8 +12,8 @@ data_augmentation = keras.Sequential(
     ]
 )
 
-IMG_HEIGHT = 150
-IMG_WIDTH = 150
+IMG_HEIGHT = 64
+IMG_WIDTH = 64
 
 base_model = tf.keras.applications.ResNet50(
     include_top=False,  # don't include fully-connected layer on top so we can build and train our own
@@ -25,6 +25,7 @@ base_model = tf.keras.applications.ResNet50(
 base_model.trainable = False
 
 inputs = keras.Input(shape=(IMG_HEIGHT, IMG_WIDTH, 3))
+random_uniform_tensor = tf.keras.backend.random_uniform(shape=(IMG_HEIGHT, IMG_WIDTH, 3), minval=0.0, maxval=1.0)
 # x = data_augmentation(inputs)  # optional data augmentation
 x = inputs
 
@@ -39,3 +40,4 @@ outputs = keras.layers.Activation('softmax')(x)
 model = keras.Model(inputs, outputs)
 
 print(model.summary())
+print(model.predict(np.array([random_uniform_tensor])))
