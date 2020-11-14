@@ -1,7 +1,12 @@
 import tensorflow as tf
 
 def loadDataset(img_directory):
-    face_mask_dataset = tf.keras.preprocessing.image_dataset_from_directory(img_directory, labels='inferred')
+    face_mask_dataset = tf.keras.preprocessing.image_dataset_from_directory(
+        img_directory, 
+        labels='inferred', 
+        class_names=["mask", "no_mask", "incorrect"],
+        image_size=(64, 64)
+    )
     return face_mask_dataset
 
 def splitGroups(dataset):
