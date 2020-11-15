@@ -6,11 +6,13 @@ import tensorflow as tf
 from tensorflow import keras
 from keras_load_dataset import loadDataset, splitGroups
 
-dataset_directory = ""
-train_split = 0.9
+dataset_directory = "./archive/images_classes"
+train_split = 0.8
+val_split = 0.1
+test_split = 0.1
 
 face_mask_dataset = loadDataset(dataset_directory)
-train_set, test_set = splitGroups(face_mask_dataset, train_split)
+train_set, val_set, test_set = splitGroups(face_mask_dataset, train_split, val_split, test_split)
 
 data_augmentation = keras.Sequential(
     [
@@ -50,13 +52,13 @@ model = keras.Model(inputs, outputs)
 print(model.summary())
 # print(model.predict(np.array([random_uniform_tensor])))
 
-lr = 1e-5
 model.compile(
-    optimizer=keras.optimizers.Adam(lr),
+    optimizer=keras.optimizers.Adam(),
     loss=tf.keras.losses.SparseCategoricalCrossentropy(),
-    metrics=[tf.keras.metrics.Accuracy()]
+    metrics=[tf.keras.metrics.SparseCategoricalAccuracy()]
 )
 
-epochs = 10
-model.fit(train_set, epochs=epochs, validation_split=0.2)
+print(train_set.element_spec)
+epochs = 20
+model.fit(train_set, epochs=epochs, validation_data=val_set)
 print(model.evaluate(test_set))
