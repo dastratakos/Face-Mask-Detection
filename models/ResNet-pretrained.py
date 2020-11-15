@@ -16,8 +16,8 @@ train_set, val_set, test_set = splitGroups(face_mask_dataset, train_split, val_s
 
 data_augmentation = keras.Sequential(
     [
-        tf.keras.layers.experimental.preprocessing.RandomFlip("horizontal"),
-        tf.keras.layers.experimental.preprocessing.RandomRotation(0.1),
+        tf.keras.layers.experimental.preprocessing.RandomFlip("horizontal_and_vertical"),
+        tf.keras.layers.experimental.preprocessing.RandomRotation(0.2),
     ]
 )
 
@@ -34,13 +34,10 @@ base_model = tf.keras.applications.ResNet50(
 base_model.trainable = False
 
 inputs = keras.Input(shape=(IMG_HEIGHT, IMG_WIDTH, 3))
-# random_uniform_tensor = tf.keras.backend.random_uniform(shape=(IMG_HEIGHT, IMG_WIDTH, 3), minval=0.0, maxval=1.0)
 
 x = data_augmentation(inputs)  # optional data augmentation
-# x = inputs
 
 x = tf.keras.applications.resnet.preprocess_input(x)  # ResNet50 input preprocessing
-
 x = base_model(x, training=False)
 x = keras.layers.GlobalAveragePooling2D()(x)
 x = keras.layers.Dropout(0.5)(x)
@@ -50,7 +47,6 @@ outputs = keras.layers.Activation('softmax')(x)
 model = keras.Model(inputs, outputs)
 
 print(model.summary())
-# print(model.predict(np.array([random_uniform_tensor])))
 
 model.compile(
     optimizer=keras.optimizers.Adam(),
@@ -58,7 +54,17 @@ model.compile(
     metrics=[tf.keras.metrics.SparseCategoricalAccuracy()]
 )
 
-print(train_set.element_spec)
 epochs = 20
 model.fit(train_set, epochs=epochs, validation_data=val_set)
+
+# fine tune over the whole model
+base_model.trainable = True
+model.compile(
+    optimizer=keras.optimizers.Adam(),
+    loss=tf.keras.losses.SparseCategoricalCrossentropy(),
+    metrics=[tf.keras.metrics.SparseCategoricalAccuracy()]
+)
+epochs = 20
+model.fit(train_set, epochs=epochs, validation_data=val_set)
+
 print(model.evaluate(test_set))
