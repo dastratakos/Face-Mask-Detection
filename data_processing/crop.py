@@ -9,13 +9,15 @@ It should take just over 30 seconds to process 853 images.
 """
 import argparse
 import csv
+import logging
 import os
 
 from PIL import Image
 from tqdm import tqdm
 
-from config import ARCHIVE_ROOT, IMAGE_ROOT, CROPPED_IMAGE_ROOT, build_description
-import preprocess
+from config import ARCHIVE_ROOT, IMAGE_ROOT, CROPPED_IMAGE_ROOT, FORMAT
+from data_processing import preprocess
+from utils import util
 
 CSV_FILE = ARCHIVE_ROOT + 'cropped_labels.csv'
 SCALE = 1.5
@@ -59,9 +61,11 @@ def get_label(label: str) -> str:
     if label in NEW_LABELS:
         return NEW_LABELS[label]
     else:
-        raise ValueError(f"Unknown label category: {label}")
+        raise ValueError(f'Unknown label category: {label}')
 
 def main():
+    logging.basicConfig(format=FORMAT, level=logging.INFO)
+    logging.info('========== Support Vector Machine ==========')
     os.makedirs(ARCHIVE_ROOT + 'cropped', exist_ok=True)
 
     image_bases, annotations = preprocess.main()
@@ -84,7 +88,7 @@ def main():
 
 if __name__ == '__main__':
     arg_parser = argparse.ArgumentParser(
-        description=build_description('Image cropping module'),
+        description=util.build_description('Image cropping module'),
         formatter_class=argparse.RawTextHelpFormatter)
 
     main()

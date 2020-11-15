@@ -15,8 +15,9 @@ from PIL import Image
 import numpy as np
 from tqdm import tqdm
 
-from config import ARCHIVE_ROOT, IMAGE_ROOT, ANNOTATION_ROOT, build_description
-import preprocess
+from config import ARCHIVE_ROOT, IMAGE_ROOT, ANNOTATION_ROOT
+from data_processing import preprocess
+from utils import util
 
 VISUALIZATION_ROOT = ARCHIVE_ROOT + 'visualizations/'
 COLORS = {
@@ -69,13 +70,13 @@ def main():
 
 if __name__ == '__main__':
     arg_parser = argparse.ArgumentParser(
-        description=build_description('Image visualization module'),
+        description=util.build_description('Image visualization module'),
         formatter_class=argparse.RawTextHelpFormatter)
-    arg_parser.add_argument("-t", "--test",
-        help="visualize a single image",
-        action="store_true")
-    arg_parser.add_argument("-i", "--image_id",
-        help="id of the image to visualize",
+    arg_parser.add_argument('-t', '--test',
+        help='visualize a single image',
+        action='store_true')
+    arg_parser.add_argument('-i', '--image_id',
+        help='id of the image to visualize',
         type=int,
         default=0)
     args = arg_parser.parse_args()

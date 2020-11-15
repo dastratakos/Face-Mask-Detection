@@ -4,6 +4,7 @@ file: preprocess.py
 Parses XML files.
 """
 import argparse
+import logging
 import os
 import pprint
 import csv
@@ -82,6 +83,8 @@ def main():
         image_bases ([str]): List of the filenames for all images
         annotations ([dict]): List of the parsed annotations
     """
+    logging.basicConfig(format=FORMAT, level=logging.INFO)
+    logging.info('========== Support Vector Machine ==========')
 
     # sort by the image id (i.e. maksssksksss[image id].png)
     image_bases = list(sorted(os.listdir(IMAGE_ROOT),
@@ -92,7 +95,7 @@ def main():
         f'Number of images ({len(image_bases)}) does not match the number of \
         annotations ({len(annotations)})'
     
-    print(f'The dataset contains {len(image_bases)} data points')
+    logging.info(f'The dataset contains {len(image_bases)} data points')
     annotations = [parseXML(ANNOTATION_ROOT + annotation)
                     for annotation in annotations]
 
@@ -100,13 +103,13 @@ def main():
 
 if __name__ == '__main__':
     arg_parser = argparse.ArgumentParser(
-        description=build_description('Preprocess module'),
+        description=util.build_description('Preprocess module'),
         formatter_class=argparse.RawTextHelpFormatter)
-    arg_parser.add_argument("-t", "--test",
-        help="parse a single XML file",
-        action="store_true")
-    arg_parser.add_argument("-f", "--file",
-        help="XML file name to run tests on",
+    arg_parser.add_argument('-t', '--test',
+        help='parse a single XML file',
+        action='store_true')
+    arg_parser.add_argument('-f', '--file',
+        help='XML file name to run tests on',
         default='maksssksksss0.xml')
     args = arg_parser.parse_args()
 
