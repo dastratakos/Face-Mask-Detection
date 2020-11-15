@@ -84,6 +84,7 @@ def main():
                                         f'image-{image_id}-{face_id}.png')
                     csv_file.writerow([image_id, face_id, get_label(object['name'])])
                 progress_bar.update()
+    preprocess.createImageClassesFolder()
 
 if __name__ == '__main__':
     arg_parser = argparse.ArgumentParser(
