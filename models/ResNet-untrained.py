@@ -44,16 +44,19 @@ x = keras.layers.Dropout(0.2)(x)
 x = keras.layers.Dense(3)(x)
 outputs = keras.layers.Activation('softmax')(x)
 
-model = keras.Model(inputs, outputs)
+strategy = tf.distribute.MirroredStrategy()
+print ('Number of devices: {}'.format(strategy.num_replicas_in_sync))
 
-print(model.summary())
+with strategy.scope():
+    model = keras.Model(inputs, outputs)
+    print(model.summary())
 
-model.compile(
-    optimizer=keras.optimizers.Adam(),
-    loss=tf.keras.losses.SparseCategoricalCrossentropy(),
-    metrics=[tf.keras.metrics.SparseCategoricalAccuracy()]
-)
+    model.compile(
+        optimizer=keras.optimizers.Adam(),
+        loss=tf.keras.losses.SparseCategoricalCrossentropy(),
+        metrics=[tf.keras.metrics.SparseCategoricalAccuracy()]
+    )
 
-epochs = 10
-model.fit(train_set, epochs=epochs, validation_data=val_set)
-print(model.evaluate(test_set))
+    epochs = 10
+    model.fit(train_set, epochs=epochs, validation_data=val_set)
+    print(model.evaluate(test_set))
