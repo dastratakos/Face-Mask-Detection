@@ -20,8 +20,6 @@ IMG_WIDTH = 64
 strategy = tf.distribute.MirroredStrategy()
 print ('Number of devices: {}'.format(strategy.num_replicas_in_sync))
 
-load_weights = False
-
 with strategy.scope():
     data_augmentation = keras.Sequential(
         [
@@ -50,9 +48,6 @@ with strategy.scope():
     outputs = keras.layers.Activation('softmax')(x)
 
     model = keras.Model(inputs, outputs)
-    if load_weights:
-        load_status = model.load_weights("untrained")
-        load_status.assert_consumed()
     print(model.summary())
 
     model.compile(
@@ -64,5 +59,4 @@ with strategy.scope():
 epochs = 10
 model.fit(train_set, epochs=epochs, validation_data=val_set)
 
-model.save_weights("untrained")
 print(model.evaluate(test_set))
