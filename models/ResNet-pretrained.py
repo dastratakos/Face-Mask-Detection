@@ -54,13 +54,13 @@ model.compile(
     metrics=[tf.keras.metrics.SparseCategoricalAccuracy()]
 )
 
-epochs = 10
+epochs = 20
 model.fit(train_set, epochs=epochs, validation_data=val_set)
 
 # fine tune over the whole model
 base_model.trainable = True
 model.compile(
-    optimizer=keras.optimizers.Adam(),
+    optimizer=keras.optimizers.Adam(1e-5),
     loss=tf.keras.losses.SparseCategoricalCrossentropy(),
     metrics=[tf.keras.metrics.SparseCategoricalAccuracy()]
 )
