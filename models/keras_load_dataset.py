@@ -14,7 +14,7 @@ def splitGroups(dataset, train_split, val_split, test_split):
     dataset_size = int(tf.data.experimental.cardinality(dataset))
     train_size = int(train_split * dataset_size)
     val_size = int(val_split * dataset_size)
-    test_size = int(test_split * dataset_size)
+    # test_size = int(test_split * dataset_size)
 
     dataset = dataset.shuffle(buffer_size=dataset_size)
     train_dataset = dataset.take(train_size)

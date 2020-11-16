@@ -40,7 +40,7 @@ x = data_augmentation(inputs)  # optional data augmentation
 x = tf.keras.applications.resnet.preprocess_input(x)  # ResNet50 input preprocessing
 x = base_model(x, training=True)
 x = keras.layers.GlobalAveragePooling2D()(x)
-x = keras.layers.Dropout(0.5)(x)
+x = keras.layers.Dropout(0.2)(x)
 x = keras.layers.Dense(3)(x)
 outputs = keras.layers.Activation('softmax')(x)
 
@@ -54,6 +54,6 @@ model.compile(
     metrics=[tf.keras.metrics.SparseCategoricalAccuracy()]
 )
 
-epochs = 20
+epochs = 10
 model.fit(train_set, epochs=epochs, validation_data=val_set)
 print(model.evaluate(test_set))
