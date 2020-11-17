@@ -17,7 +17,7 @@ train_set, val_set, test_set = splitGroups(face_mask_dataset, train_split, val_s
 
 ds_numpy = tfds.as_numpy(test_set)
 for ex in ds_numpy:
-    print(ds_numpy)
+    print(ex)
 
 IMG_HEIGHT = 64
 IMG_WIDTH = 64
