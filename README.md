@@ -140,9 +140,9 @@ npm install npm@latest -g
 ```sh
 git clone https://github.com/dastratakos/Face-Mask-Detection.git
 ```
-2. Install NPM packages
+2. Install packages
 ```sh
-npm install
+pip install -r requirements.txt
 ```
 
 <!-- USAGE EXAMPLES -->

@@ -17,7 +17,7 @@ def get_image_bases(image_root: str) -> list:
     image_bases are sorted by the image id, then face id, then augment id.
     (i.e. image-[image id]-[face id]-[augment id].png) """
     return list(sorted(os.listdir(image_root), key=lambda x: tuple(
-        x.split('-')[i] for i in range(1, len(x.split('-'))))))
+        int(x.split('.')[0].split('-')[i]) for i in range(1, len(x.split('-'))))))
 
 def load_dataset(csv_path: str, image_root: str):
     """Load dataset from a CSV file.

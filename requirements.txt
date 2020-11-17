@@ -1,0 +1,3 @@
+# This tells pip to just take the requirement from setup.py.
+
+-e .

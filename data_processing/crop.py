@@ -65,7 +65,7 @@ def get_label(label: str) -> str:
 
 def main():
     logging.basicConfig(format=FORMAT, level=logging.INFO)
-    logging.info('========== Support Vector Machine ==========')
+    logging.info('========== Cropping Module ==========')
     os.makedirs(ARCHIVE_ROOT + 'cropped', exist_ok=True)
 
     image_bases, annotations = preprocess.main()
