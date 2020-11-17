@@ -67,7 +67,7 @@ f.write("BEFORE TRAINING EVALUATION")
 f.write("MODEL EVALUATION (loss, metrics): " + str(model.evaluate(test_set)))
 f.write("BALANCED ACCURACY: " + str(metrics.balanced_accuracy_score(labels, tf.argmax(input=model.predict(test_set), axis=1).numpy())))
 
-epochs = 20
+epochs = 40
 model.fit(train_set, epochs=epochs, validation_data=val_set)
 
 f = open("pretrained-output.txt", "a")
@@ -84,7 +84,7 @@ with strategy.scope():
         metrics=[tf.keras.metrics.SparseCategoricalAccuracy()]
     )
     
-epochs = 10
+epochs = 20
 model.fit(train_set, epochs=epochs, validation_data=val_set)
 
 f = open("pretrained-output.txt", "a")
