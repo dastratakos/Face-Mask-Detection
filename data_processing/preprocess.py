@@ -4,22 +4,53 @@ file: preprocess.py
 Parses XML files.
 """
 import argparse
+import copy
 import logging
 import os
 import pprint
-import csv
-import pandas
 import shutil
 import xml.etree.ElementTree as ET
 
-from config import IMAGE_ROOT, ANNOTATION_ROOT, build_description, CROPPED_IMAGE_ROOT, \
-    NUM_CLASSES_IN_MODEL, CROPPED_CLASS_ROOT, ARCHIVE_ROOT
+import numpy as np
+import pandas as pd
+
+from config import IMAGE_ROOT, ANNOTATION_ROOT, CROPPED_IMAGE_ROOT, \
+    NUM_CLASSES_IN_MODEL, CROPPED_CLASS_ROOT, ARCHIVE_ROOT, FORMAT
+from utils import util
+
+LABELS = {
+    'no_mask': 0,
+    'mask': 1,
+    'incorrect': 2
+    }
+
+def separateByClass():
+    """
+    From the CROPPED_IMAGE_ROOT, this function generates a set of directories
+    that contain all the images for masked people, unmasked people, and people
+    wearing masks incorrect
+    :return: A folder with n subfolders, where n is the number of classes in
+    the ML model and each subfolder contains all the images for the given class.
+    """
+    os.makedirs(CROPPED_CLASS_ROOT, exist_ok=True)
+    for label in LABELS:
+        os.makedirs(CROPPED_CLASS_ROOT + label, exist_ok=True)
+    labels = np.loadtxt(ARCHIVE_ROOT + 'cropped_labels.csv', delimiter=',', skiprows=1)
+    labels = [list(x) for x in labels]
+    filenames = util.get_image_bases(CROPPED_IMAGE_ROOT)
+    for filename in filenames:
+        image_id = [int(x) for x in filename.split('.')[0].split('-')[1:]]
+        for i, label in enumerate(list(LABELS.keys())):
+            temp = copy.deepcopy(image_id)
+            temp.append(i)
+            if temp in labels:
+                shutil.copy(CROPPED_IMAGE_ROOT + filename, CROPPED_CLASS_ROOT + label)
 
 def createImageClassesFolder():
     """
-    From the CROPPED_IMAGE_ROOT, this function generates
-    a set of directories that contain all the images for
-    masked people, unmasked people, and people wearing masks incorrect
+    From the CROPPED_IMAGE_ROOT, this function generates a set of directories
+    that contain all the images for masked people, unmasked people, and people
+    wearing masks incorrect
     :return: A folder with n subfolders, where n is the number of classes in
     the ML model and each subfolder contains all the images for the given class.
     """
@@ -27,8 +58,8 @@ def createImageClassesFolder():
     for class_num in range(NUM_CLASSES_IN_MODEL):
         path = CROPPED_CLASS_ROOT + "class_" + str(class_num) + '/'
         if not os.path.isdir(path): os.mkdir(path)
-    labels = pandas.read_csv(ARCHIVE_ROOT + 'cropped_labels.csv')
-    files = sorted(os.listdir(CROPPED_IMAGE_ROOT))
+    labels = pd.read_csv(ARCHIVE_ROOT + 'cropped_labels.csv')
+    files = util.get_image_bases(CROPPED_IMAGE_ROOT)
     for i in range(len(files)):
         image_num = int(files[i][files[i].find('e') + 1: files[i].find('.')])
         if labels['label'][image_num] == 'mask':
@@ -37,8 +68,6 @@ def createImageClassesFolder():
             shutil.copy(CROPPED_IMAGE_ROOT + files[i], CROPPED_CLASS_ROOT + 'class_1')
         else:
             shutil.copy(CROPPED_IMAGE_ROOT + files[i], CROPPED_CLASS_ROOT + 'class_2')
-
-
 
 def parseXML(xml_filename: str) -> dict:
     """ This function generates an annotation dictionary representation of
@@ -84,7 +113,7 @@ def main():
         annotations ([dict]): List of the parsed annotations
     """
     logging.basicConfig(format=FORMAT, level=logging.INFO)
-    logging.info('========== Support Vector Machine ==========')
+    logging.info('========== Preprocessing Module ==========')
 
     # sort by the image id (i.e. maksssksksss[image id].png)
     image_bases = list(sorted(os.listdir(IMAGE_ROOT),

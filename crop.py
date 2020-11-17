@@ -64,8 +64,11 @@ def get_label(label: str) -> str:
         raise ValueError(f'Unknown label category: {label}')
 
 def main():
+    preprocess.separateByClass()
+    return
+
     logging.basicConfig(format=FORMAT, level=logging.INFO)
-    logging.info('========== Support Vector Machine ==========')
+    logging.info('========== Cropping Module ==========')
     os.makedirs(ARCHIVE_ROOT + 'cropped', exist_ok=True)
 
     image_bases, annotations = preprocess.main()

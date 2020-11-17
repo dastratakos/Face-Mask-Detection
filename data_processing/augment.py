@@ -123,9 +123,17 @@ def test_all_transformations(image_base):
         name = transformation.__name__
         io.imsave(f'{augmented_base}-{name}.png', im2)
 
+def augment_image(im, num_transformations=2):
+    im2 = im
+    for _ in range(num_transformations):
+        transform = random.choice(TRANSFORMATIONS)
+        im2 = transform(im2)
+    return im2
+
+
 def main():
     logging.basicConfig(format=FORMAT, level=logging.INFO)
-    logging.info('========== Support Vector Machine ==========')
+    logging.info('========== Augmenting Module ==========')
     os.makedirs(ARCHIVE_ROOT + 'augmented', exist_ok=True)
 
     # labels = {'[image id]-[face id]': label for each line}
@@ -151,10 +159,7 @@ def main():
                 csv_file.writerow([image_id, face_id, 0, label])
                 for augment_id in range(1, FACTOR):
                     num_transformations = random.randint(1, 3)
-                    im2 = im
-                    for _ in range(num_transformations):
-                        transform = random.choice(TRANSFORMATIONS)
-                        im2 = transform(im2)
+                    im2 = augment_image(im, num_transformations)
                     io.imsave(f'{augmented_base}-{augment_id}.png', im2)
                     csv_file.writerow([image_id, face_id, augment_id, label])
                 progress_bar.update()
