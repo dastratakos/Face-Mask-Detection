@@ -4,6 +4,7 @@
 import numpy as np
 import tensorflow as tf
 from tensorflow import keras
+import tensorflow_datset as tfds
 from keras_load_dataset import loadDataset, splitGroups
 
 dataset_directory = "./archive/balanced"
@@ -13,6 +14,9 @@ test_split = 0.1
 
 face_mask_dataset = loadDataset(dataset_directory)
 train_set, val_set, test_set = splitGroups(face_mask_dataset, train_split, val_split, test_split)
+
+ds_numpy = tfds.as_numpy(test_set)
+print(test_set)
 
 IMG_HEIGHT = 64
 IMG_WIDTH = 64
