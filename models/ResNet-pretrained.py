@@ -66,7 +66,7 @@ print("BEFORE TRAINING EVALUATION")
 print("MODEL EVALUATION")
 print(model.evaluate(test_set))
 print("BALANCED ACCURACY")
-print(tf.argmax(input=model.predict(test_set), axis=0))
+print(tf.argmax(input=model.predict(test_set), axis=1).numpy())
 print(metrics.balanced_accuracy_score(labels, model.predict(test_set)))
 
 # epochs = 20
