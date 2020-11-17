@@ -66,32 +66,31 @@ print("BEFORE TRAINING EVALUATION")
 print("MODEL EVALUATION")
 print(model.evaluate(test_set))
 print("BALANCED ACCURACY")
-print(tf.argmax(input=model.predict(test_set), axis=1).numpy())
-print(metrics.balanced_accuracy_score(labels, model.predict(test_set)))
+print(metrics.balanced_accuracy_score(labels, tf.argmax(input=model.predict(test_set), axis=1).numpy()))
 
-# epochs = 20
-# model.fit(train_set, epochs=epochs, validation_data=val_set)
+epochs = 20
+model.fit(train_set, epochs=epochs, validation_data=val_set)
 
-# print("AFTER FINE TUNING EVALUATION")
-# print("MODEL EVALUATION")
-# print(model.evaluate(test_set))
-# print("BALANCED ACCURACY")
-# print(metrics.balanced_accuracy_score(labels, model.predict(test_set)))
+print("AFTER FINE TUNING EVALUATION")
+print("MODEL EVALUATION")
+print(model.evaluate(test_set))
+print("BALANCED ACCURACY")
+print(metrics.balanced_accuracy_score(labels, tf.argmax(input=model.predict(test_set), axis=1).numpy()))
 
-# with strategy.scope():
-#     # fine tune over the whole model
-#     base_model.trainable = True
-#     model.compile(
-#         optimizer=keras.optimizers.Adam(1e-5),
-#         loss=tf.keras.losses.SparseCategoricalCrossentropy(),
-#         metrics=[tf.keras.metrics.SparseCategoricalAccuracy()]
-#     )
+with strategy.scope():
+    # fine tune over the whole model
+    base_model.trainable = True
+    model.compile(
+        optimizer=keras.optimizers.Adam(1e-5),
+        loss=tf.keras.losses.SparseCategoricalCrossentropy(),
+        metrics=[tf.keras.metrics.SparseCategoricalAccuracy()]
+    )
     
-# epochs = 10
-# model.fit(train_set, epochs=epochs, validation_data=val_set)
+epochs = 10
+model.fit(train_set, epochs=epochs, validation_data=val_set)
 
-# print("AFTER TOTAL MODEL TRAINING EVALUATION")
-# print("MODEL EVALUATION")
-# print(model.evaluate(test_set))
-# print("BALANCED ACCURACY")
-# print(metrics.balanced_accuracy_score(labels, model.predict(test_set)))
+print("AFTER TOTAL MODEL TRAINING EVALUATION")
+print("MODEL EVALUATION")
+print(model.evaluate(test_set))
+print("BALANCED ACCURACY")
+print(metrics.balanced_accuracy_score(labels, tf.argmax(input=model.predict(test_set), axis=1).numpy()))
