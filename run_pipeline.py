@@ -14,6 +14,8 @@ from config import FORMAT
 from utils import util
 
 from models import logreg
+from models import resNetPretrained
+from models import resNetUntrained
 from models import svm
 
 def parse_args() -> dict:
@@ -23,7 +25,8 @@ def parse_args() -> dict:
         formatter_class=argparse.RawTextHelpFormatter)
     arg_parser.add_argument('model',
         help='specify the model to run', type=str,
-        choices=['LogReg', 'SVM', 'CNN'], default=3)
+        choices=['LogReg', 'SVM', 'ResNetUntrained', 'ResNetPretrained'],
+        default='resNetPretrained')
     group = arg_parser.add_mutually_exclusive_group()
     group.add_argument('-v', '--verbose', help='increase output verbosity',
         action='store_true')
@@ -41,8 +44,10 @@ def main():
         logreg.main()
     elif args.model == 'SVM':
         svm.main()
-    elif args.model == 'CNN':
-        logging.info('========== CNN (not yet implemented) ==========')
+    elif args.model == 'ResNetUntrained':
+        resNetUntrained.main()
+    elif args.model == 'ResNetPretrained':
+        resNetPretrained.main()
     
     logging.info('Total runtime: {}'.format(datetime.now() - start))
 
