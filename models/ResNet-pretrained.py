@@ -6,6 +6,7 @@ import tensorflow as tf
 from tensorflow import keras
 import tensorflow_datasets as tfds
 from keras_load_dataset import loadDataset, splitGroups
+from sklearn import metrics
 
 dataset_directory = "./archive/balanced"
 train_split = 0.8
@@ -61,8 +62,20 @@ with strategy.scope():
         metrics=[tf.keras.metrics.SparseCategoricalAccuracy()]
     )
 
+print("BEFORE TRAINING EVALUATION")
+print("MODEL EVALUATION")
+print(model.evaluate(test_set))
+print("BALANCED ACCURACY")
+print(metrics.balanced_accuracy_score(labels, model.predict(test_set)))
+
 epochs = 20
 model.fit(train_set, epochs=epochs, validation_data=val_set)
+
+print("AFTER FINE TUNING EVALUATION")
+print("MODEL EVALUATION")
+print(model.evaluate(test_set))
+print("BALANCED ACCURACY")
+print(metrics.balanced_accuracy_score(labels, model.predict(test_set)))
 
 with strategy.scope():
     # fine tune over the whole model
@@ -76,4 +89,8 @@ with strategy.scope():
 epochs = 10
 model.fit(train_set, epochs=epochs, validation_data=val_set)
 
+print("AFTER TOTAL MODEL TRAINING EVALUATION")
+print("MODEL EVALUATION")
 print(model.evaluate(test_set))
+print("BALANCED ACCURACY")
+print(metrics.balanced_accuracy_score(labels, model.predict(test_set)))

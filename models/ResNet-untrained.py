@@ -6,6 +6,7 @@ import tensorflow as tf
 from tensorflow import keras
 import tensorflow_datasets as tfds
 from keras_load_dataset import loadDataset, splitGroups
+from sklearn import metrics
 
 dataset_directory = "./archive/balanced"
 train_split = 0.8
@@ -15,8 +16,8 @@ test_split = 0.1
 face_mask_dataset = loadDataset(dataset_directory)
 train_set, val_set, test_set = splitGroups(face_mask_dataset, train_split, val_split, test_split)
 
-ds_numpy = tfds.as_numpy(test_set)
-print(ds_numpy)
+labels = np.concatenate([y for x, y in test_set], axis=0)
+print(labels)
 
 IMG_HEIGHT = 64
 IMG_WIDTH = 64
@@ -60,7 +61,17 @@ with strategy.scope():
         metrics=[tf.keras.metrics.SparseCategoricalAccuracy()]
     )
 
+print("BEFORE TRAINING EVALUATION")
+print("MODEL EVALUATION")
+print(model.evaluate(test_set))
+print("BALANCED ACCURACY")
+print(metrics.balanced_accuracy_score(labels, model.predict(test_set)))
+
 epochs = 10
 model.fit(train_set, epochs=epochs, validation_data=val_set)
 
+print("AFTER TOTAL MODEL TRAINING EVALUATION")
+print("MODEL EVALUATION")
 print(model.evaluate(test_set))
+print("BALANCED ACCURACY")
+print(metrics.balanced_accuracy_score(labels, model.predict(test_set)))
