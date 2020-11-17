@@ -18,7 +18,6 @@ from tqdm import tqdm
 
 from config import ARCHIVE_ROOT, BALANCED_IMAGE_ROOT, IMAGE_ROOT, CROPPED_IMAGE_ROOT, FORMAT
 from data_processing import augment
-from data_processing import preprocess
 from utils import util
 
 CSV_FILE = ARCHIVE_ROOT + 'cropped_labels.csv'
@@ -49,9 +48,9 @@ def upsample_incorrect():
         filename = random.choice(filenames)
         im = io.imread('archive/images_classes/incorrect/' + filename)
         im2 = augment.augment_image(im)
-        io.imsave(f'archive/balanced/incorrect/{filename}-{i}.png', im2)
+        io.imsave(f"archive/balanced/incorrect/{filename.split('.')[0]}-{i}.png", im2)
 
-def downsample_mask(cropped):
+def downsample_mask():
     print("downsampling mask")
     filenames = os.listdir('archive/images_classes/mask')
     downsampled = random.sample(filenames, TARGET)
@@ -63,22 +62,25 @@ def main():
     logging.info('========== Reweighting module ==========')
     os.makedirs(ARCHIVE_ROOT + 'balanced', exist_ok=True)
 
-    # image_bases, annotations = preprocess.main()
+    # cropped = np.loadtxt(CSV_FILE, delimiter=',', skiprows=1)
+    # total = cropped.shape[0]
 
-    cropped = np.loadtxt(CSV_FILE, delimiter=',', skiprows=1)
-    total = cropped.shape[0]
+    # num_no_mask = len(os.listdir('archive/images_classes/no_mask'))
+    # num_mask = len(os.listdir('archive/images_classes/mask'))
+    # num_incorrect = len(os.listdir('archive/images_classes/incorrect'))
+    # print(f'num_no_mask:    {num_no_mask} \t> {num_no_mask / total : .2%}')
+    # print(f'num_mask:       {num_mask} \t> {num_mask / total : .2%}')
+    # print(f'num_incorrect:  {num_incorrect} \t> {num_incorrect / total : .2%}')
+    # print(f'total:          {total}')
 
-    num_no_mask = len(os.listdir('archive/images_classes/no_mask'))
-    num_mask = len(os.listdir('archive/images_classes/mask'))
-    num_incorrect = len(os.listdir('archive/images_classes/incorrect'))
-    print(f'num_no_mask:    {num_no_mask} \t> {num_no_mask / total : .2%}')
-    print(f'num_mask:       {num_mask} \t> {num_mask / total : .2%}')
-    print(f'num_incorrect:  {num_incorrect} \t> {num_incorrect / total : .2%}')
-    print(f'total:          {total}')
-
+    os.makedirs('archive/balanced/', exist_ok=True)
+    os.makedirs('archive/balanced/mask', exist_ok=True)
+    os.makedirs('archive/balanced/no_mask', exist_ok=True)
+    os.makedirs('archive/balanced/incorrect', exist_ok=True)
+    
     upsample_no_mask()
     upsample_incorrect()
-    downsample_mask(cropped)
+    downsample_mask()
 
 if __name__ == '__main__':
     arg_parser = argparse.ArgumentParser(
