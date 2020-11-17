@@ -4,7 +4,7 @@
 import numpy as np
 import tensorflow as tf
 from tensorflow import keras
-import tensorflow_dataset as tfds
+import tensorflow_datasets as tfds
 from keras_load_dataset import loadDataset, splitGroups
 
 dataset_directory = "./archive/balanced"
