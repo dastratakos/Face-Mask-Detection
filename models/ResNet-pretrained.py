@@ -15,9 +15,8 @@ test_split = 0.1
 face_mask_dataset = loadDataset(dataset_directory)
 train_set, val_set, test_set = splitGroups(face_mask_dataset, train_split, val_split, test_split)
 
-ds_numpy = tfds.as_numpy(test_set)
-for ex in ds_numpy:
-    print(ex)
+labels = np.concatenate([y for x, y in test_set], axis=0)
+print(labels)
 
 IMG_HEIGHT = 64
 IMG_WIDTH = 64
