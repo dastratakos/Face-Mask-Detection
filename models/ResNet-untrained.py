@@ -7,7 +7,7 @@ from tensorflow import keras
 from keras_load_dataset import loadDataset, splitGroups
 import datetime
 
-dataset_directory = "./archive/images_classes"
+dataset_directory = "./archive/balanced"
 train_split = 0.8
 val_split = 0.1
 test_split = 0.1
