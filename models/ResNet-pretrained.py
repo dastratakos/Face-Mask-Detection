@@ -58,11 +58,8 @@ with strategy.scope():
         metrics=[tf.keras.metrics.SparseCategoricalAccuracy()]
     )
 
-    log_dir = "logs/fit/" + datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
-    tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir=log_dir, histogram_freq=1)
-
 epochs = 20
-model.fit(train_set, epochs=epochs, validation_data=val_set, callbacks=[tensorboard_callback])
+model.fit(train_set, epochs=epochs, validation_data=val_set)
 
 with strategy.scope():
     # fine tune over the whole model
@@ -72,11 +69,8 @@ with strategy.scope():
         loss=tf.keras.losses.SparseCategoricalCrossentropy(),
         metrics=[tf.keras.metrics.SparseCategoricalAccuracy()]
     )
-
-    log_dir = "logs/fit/" + datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
-    tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir=log_dir, histogram_freq=1)
     
 epochs = 10
-model.fit(train_set, epochs=epochs, validation_data=val_set, callbacks=[tensorboard_callback])
+model.fit(train_set, epochs=epochs, validation_data=val_set)
 
 print(model.evaluate(test_set))

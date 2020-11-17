@@ -5,7 +5,6 @@ import numpy as np
 import tensorflow as tf
 from tensorflow import keras
 from keras_load_dataset import loadDataset, splitGroups
-import datetime
 
 dataset_directory = "./archive/balanced"
 train_split = 0.8
@@ -57,10 +56,7 @@ with strategy.scope():
         metrics=[tf.keras.metrics.SparseCategoricalAccuracy()]
     )
 
-    log_dir = "logs/fit/" + datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
-    tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir=log_dir, histogram_freq=1)
-
 epochs = 10
-model.fit(train_set, epochs=epochs, validation_data=val_set, callbacks=[tensorboard_callback])
+model.fit(train_set, epochs=epochs, validation_data=val_set)
 
 print(model.evaluate(test_set))
