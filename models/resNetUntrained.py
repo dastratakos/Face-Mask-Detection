@@ -41,7 +41,6 @@ def main():
                 tf.keras.layers.experimental.preprocessing.RandomRotation(0.2),
             ]
         )
-        inputs = keras.Input(shape=(IMG_HEIGHT, IMG_WIDTH, 3))
 
         base_model = tf.keras.applications.ResNet50(
             include_top=False,
@@ -51,6 +50,8 @@ def main():
 
         # Don't freeze base_model
         base_model.trainable = True
+        
+        inputs = keras.Input(shape=(IMG_HEIGHT, IMG_WIDTH, 3))
 
         x = data_augmentation(inputs)  # optional data augmentation
 
