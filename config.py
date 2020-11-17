@@ -7,11 +7,11 @@ TODO: extend this file to be modified based on the command line arguments.
 
 ARCHIVE_ROOT = './archive/'
 ANNOTATION_ROOT = ARCHIVE_ROOT + 'annotations/'
-AUGMENTED_IMAGE_ROOT = ARCHIVE_ROOT + 'augmented/'
-BALANCED_IMAGE_ROOT = ARCHIVE_ROOT + 'balanced/'
-CROPPED_CLASS_ROOT = ARCHIVE_ROOT + 'images_classes/'
-CROPPED_IMAGE_ROOT = ARCHIVE_ROOT + 'cropped/'
 IMAGE_ROOT = ARCHIVE_ROOT + 'images/'
+CROPPED_IMAGE_ROOT = ARCHIVE_ROOT + 'cropped/'
+AUGMENTED_IMAGE_ROOT = ARCHIVE_ROOT + 'augmented/'
+CROPPED_BY_CLASS_ROOT = ARCHIVE_ROOT + 'cropped_by_class/'
+BALANCED_IMAGE_ROOT = ARCHIVE_ROOT + 'balanced/'
 NUM_CLASSES_IN_MODEL = 3
 
 # logging format

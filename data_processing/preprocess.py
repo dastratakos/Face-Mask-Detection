@@ -15,7 +15,7 @@ import numpy as np
 import pandas as pd
 
 from config import IMAGE_ROOT, ANNOTATION_ROOT, CROPPED_IMAGE_ROOT, \
-    NUM_CLASSES_IN_MODEL, CROPPED_CLASS_ROOT, ARCHIVE_ROOT, FORMAT
+    NUM_CLASSES_IN_MODEL, CROPPED_BY_CLASS_ROOT, ARCHIVE_ROOT, FORMAT
 from utils import util
 
 LABELS = {
@@ -26,16 +26,14 @@ LABELS = {
 
 def separateByClass():
     """
-    From the CROPPED_IMAGE_ROOT, this function generates a set of directories
-    that contain all the images for masked people, unmasked people, and people
-    wearing masks incorrect
-    :return: A folder with n subfolders, where n is the number of classes in
-    the ML model and each subfolder contains all the images for the given class.
+    Using the cropped images, this function creates a new directory where the
+    images are separated by their class (Mask, No mask, Incorrect).
     """
-    os.makedirs(CROPPED_CLASS_ROOT, exist_ok=True)
+    os.makedirs(CROPPED_BY_CLASS_ROOT, exist_ok=True)
     for label in LABELS:
-        os.makedirs(CROPPED_CLASS_ROOT + label, exist_ok=True)
-    labels = np.loadtxt(ARCHIVE_ROOT + 'cropped_labels.csv', delimiter=',', skiprows=1)
+        os.makedirs(CROPPED_BY_CLASS_ROOT + label, exist_ok=True)
+    labels = np.loadtxt(ARCHIVE_ROOT + 'cropped_labels.csv', delimiter=',',
+                        skiprows=1)
     labels = [list(x) for x in labels]
     filenames = util.get_image_bases(CROPPED_IMAGE_ROOT)
     for filename in filenames:
@@ -44,30 +42,31 @@ def separateByClass():
             temp = copy.deepcopy(image_id)
             temp.append(i)
             if temp in labels:
-                shutil.copy(CROPPED_IMAGE_ROOT + filename, CROPPED_CLASS_ROOT + label)
+                shutil.copy(CROPPED_IMAGE_ROOT + filename,
+                            CROPPED_BY_CLASS_ROOT + label)
 
 def createImageClassesFolder():
     """
     From the CROPPED_IMAGE_ROOT, this function generates a set of directories
     that contain all the images for masked people, unmasked people, and people
-    wearing masks incorrect
+    wearing masks incorrect.
     :return: A folder with n subfolders, where n is the number of classes in
     the ML model and each subfolder contains all the images for the given class.
     """
-    if not os.path.isdir(CROPPED_CLASS_ROOT): os.mkdir(CROPPED_CLASS_ROOT)
+    if not os.path.isdir(CROPPED_BY_CLASS_ROOT): os.mkdir(CROPPED_BY_CLASS_ROOT)
     for class_num in range(NUM_CLASSES_IN_MODEL):
-        path = CROPPED_CLASS_ROOT + "class_" + str(class_num) + '/'
+        path = CROPPED_BY_CLASS_ROOT + "class_" + str(class_num) + '/'
         if not os.path.isdir(path): os.mkdir(path)
     labels = pd.read_csv(ARCHIVE_ROOT + 'cropped_labels.csv')
     files = util.get_image_bases(CROPPED_IMAGE_ROOT)
     for i in range(len(files)):
         image_num = int(files[i][files[i].find('e') + 1: files[i].find('.')])
         if labels['label'][image_num] == 'mask':
-            shutil.copy(CROPPED_IMAGE_ROOT + files[i], CROPPED_CLASS_ROOT + 'class_0')
+            shutil.copy(CROPPED_IMAGE_ROOT + files[i], CROPPED_BY_CLASS_ROOT + 'class_0')
         elif labels['label'][image_num] == 'no mask':
-            shutil.copy(CROPPED_IMAGE_ROOT + files[i], CROPPED_CLASS_ROOT + 'class_1')
+            shutil.copy(CROPPED_IMAGE_ROOT + files[i], CROPPED_BY_CLASS_ROOT + 'class_1')
         else:
-            shutil.copy(CROPPED_IMAGE_ROOT + files[i], CROPPED_CLASS_ROOT + 'class_2')
+            shutil.copy(CROPPED_IMAGE_ROOT + files[i], CROPPED_BY_CLASS_ROOT + 'class_2')
 
 def parseXML(xml_filename: str) -> dict:
     """ This function generates an annotation dictionary representation of
