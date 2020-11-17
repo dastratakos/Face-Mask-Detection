@@ -56,7 +56,7 @@ with strategy.scope():
     print(model.summary())
 
     model.compile(
-        optimizer=keras.optimizers.Adam(1e-5),
+        optimizer=keras.optimizers.Adam(),
         loss=tf.keras.losses.SparseCategoricalCrossentropy(),
         metrics=[tf.keras.metrics.SparseCategoricalAccuracy()]
     )

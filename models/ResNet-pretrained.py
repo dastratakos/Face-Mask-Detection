@@ -57,7 +57,7 @@ with strategy.scope():
     print(model.summary())
 
     model.compile(
-        optimizer=keras.optimizers.Adam(1e-5),
+        optimizer=keras.optimizers.Adam(),
         loss=tf.keras.losses.SparseCategoricalCrossentropy(),
         metrics=[tf.keras.metrics.SparseCategoricalAccuracy()]
     )
@@ -77,7 +77,7 @@ with strategy.scope():
     # fine tune over the whole model
     base_model.trainable = True
     model.compile(
-        optimizer=keras.optimizers.Adam(1e-5),
+        optimizer=keras.optimizers.Adam(),
         loss=tf.keras.losses.SparseCategoricalCrossentropy(),
         metrics=[tf.keras.metrics.SparseCategoricalAccuracy()]
     )
