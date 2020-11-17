@@ -16,7 +16,7 @@ test_split = 0.1
 face_mask_dataset = loadDataset(dataset_directory)
 train_set, val_set, test_set = splitGroups(face_mask_dataset, train_split, val_split, test_split)
 
-labels = np.concatenate([y for x, y in test_set], axis=0)
+labels = np.array(np.concatenate([y for x, y in test_set], axis=0))
 print(labels)
 
 IMG_HEIGHT = 64
