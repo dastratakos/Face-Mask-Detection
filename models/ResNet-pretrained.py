@@ -57,6 +57,12 @@ model = keras.Model(inputs, outputs)
     )
 
 scores = model.predict(test_set)
+
+print("LABELS")
+print(labels)
+print("SCORES")
+print(scores)
+
 predictions = tf.argmax(input=scores, axis=1).numpy()
 f = open("pretrained-output.txt", "a")
 f.write("BEFORE TRAINING EVALUATION\n")
