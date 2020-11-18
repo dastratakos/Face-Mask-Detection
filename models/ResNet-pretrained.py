@@ -43,7 +43,7 @@ model = keras.Model(inputs, outputs)
     x = tf.keras.applications.resnet.preprocess_input(x)  # ResNet50 input preprocessing
     x = base_model(x, training=False)
     x = keras.layers.GlobalAveragePooling2D()(x)
-    x = keras.layers.Dropout(0.2)(x)
+    x = keras.layers.Dropout(0.5)(x)
     x = keras.layers.Dense(3)(x)
     outputs = keras.layers.Activation('softmax')(x)
 
@@ -56,23 +56,31 @@ model = keras.Model(inputs, outputs)
         metrics=[tf.keras.metrics.SparseCategoricalAccuracy()]
     )
 
+predictions = tf.argmax(input=model.predict(test_set), axis=1).numpy()
 f = open("pretrained-output.txt", "a")
 f.write("BEFORE TRAINING EVALUATION\n")
 f.write("MODEL EVALUATION (loss, metrics): " + str(model.evaluate(test_set)) + "\n")
-f.write("BALANCED ACCURACY: " + str(metrics.balanced_accuracy_score(labels, tf.argmax(input=model.predict(test_set), axis=1).numpy())) + "\n")
+f.write("BALANCED ACCURACY: " + str(metrics.balanced_accuracy_score(labels, predictions)) + "\n")
+f.write("CONFUSION MATRIX: " + str(metrics.confusion_matrix(labels, predictions)) + "\n")
+f.write("ROC AUC SCORE: " + str(metrics.roc_auc_score(labels, predictions)) + "\n")
 
 with strategy.scope():
     epochs = 20
     model.fit(train_set, epochs=epochs, validation_data=val_set)
 
+predictions = tf.argmax(input=model.predict(test_set), axis=1).numpy()
 f = open("pretrained-output.txt", "a")
 f.write("AFTER FINE TUNING EVALUATION\n")
 f.write("MODEL EVALUATION (loss, metrics): " + str(model.evaluate(test_set)) + "\n")
-f.write("BALANCED ACCURACY: " + str(metrics.balanced_accuracy_score(labels, tf.argmax(input=model.predict(test_set), axis=1).numpy())) + "\n")
+f.write("BALANCED ACCURACY: " + str(metrics.balanced_accuracy_score(labels, predictions)) + "\n")
+f.write("CONFUSION MATRIX: " + str(metrics.confusion_matrix(labels, predictions)) + "\n")
+f.write("ROC AUC SCORE: " + str(metrics.roc_auc_score(labels, predictions)) + "\n")
 
 with strategy.scope():
     # fine tune over the whole model
     base_model.trainable = True
+    print(model.summary())
+
     model.compile(
         optimizer=keras.optimizers.Adam(),
         loss=tf.keras.losses.SparseCategoricalCrossentropy(),
@@ -82,7 +90,10 @@ with strategy.scope():
     epochs = 10
     model.fit(train_set, epochs=epochs, validation_data=val_set)
 
+predictions = tf.argmax(input=model.predict(test_set), axis=1).numpy()
 f = open("pretrained-output.txt", "a")
-f.write("AFTER TRAINING EVALUATION\n")
+f.write("AFTER FULL MODEL TRAINING EVALUATION\n")
 f.write("MODEL EVALUATION (loss, metrics): " + str(model.evaluate(test_set)) + "\n")
-f.write("BALANCED ACCURACY: " + str(metrics.balanced_accuracy_score(labels, tf.argmax(input=model.predict(test_set), axis=1).numpy())) + "\n")
+f.write("BALANCED ACCURACY: " + str(metrics.balanced_accuracy_score(labels, predictions)) + "\n")
+f.write("CONFUSION MATRIX: " + str(metrics.confusion_matrix(labels, predictions)) + "\n")
+f.write("ROC AUC SCORE: " + str(metrics.roc_auc_score(labels, predictions)) + "\n")
