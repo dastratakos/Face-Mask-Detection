@@ -57,7 +57,7 @@ f.write("BEFORE TRAINING EVALUATION\n")
 f.write("MODEL EVALUATION (loss, metrics): " + str(model.evaluate(test_set)) + "\n")
 f.write("BALANCED ACCURACY: " + str(metrics.balanced_accuracy_score(labels, predictions)) + "\n")
 f.write("CONFUSION MATRIX: " + str(metrics.confusion_matrix(labels, predictions)) + "\n")
-f.write("ROC AUC SCORE: " + str(metrics.roc_auc_score(labels, scores)) + "\n")
+f.write("ROC AUC SCORE: " + str(metrics.roc_auc_score(labels, scores, multi_class='ovr')) + "\n")
 
 with strategy.scope():
     epochs = 30
@@ -70,4 +70,4 @@ f.write("AFTER TRAINING EVALUATION\n")
 f.write("MODEL EVALUATION (loss, metrics): " + str(model.evaluate(test_set)) + "\n")
 f.write("BALANCED ACCURACY: " + str(metrics.balanced_accuracy_score(labels, predictions)) + "\n")
 f.write("CONFUSION MATRIX: " + str(metrics.confusion_matrix(labels, predictions)) + "\n")
-f.write("ROC AUC SCORE: " + str(metrics.roc_auc_score(labels, scores)) + "\n")
+f.write("ROC AUC SCORE: " + str(metrics.roc_auc_score(labels, scores, multi_class='ovr')) + "\n")
