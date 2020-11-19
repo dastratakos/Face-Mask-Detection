@@ -5,8 +5,7 @@
 [![Issues][issues-shield]][issues-url]
 [![MIT License][license-shield]][license-url]
 
-<br />
-<p align="center">
+<div align="center">
   <h1 align="center">Face Mask Detection</h1>
 
   <p align="center">
@@ -18,7 +17,7 @@
   </p>
 
   <img align="center" src="images/data.png" title="Image" alt="Image" width="600"/>
-</p>
+</div>
 
 <!-- TABLE OF CONTENTS -->
 ## Table of Contents
