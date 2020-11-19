@@ -15,14 +15,8 @@ import numpy as np
 import pandas as pd
 
 from config import IMAGE_ROOT, ANNOTATION_ROOT, CROPPED_IMAGE_ROOT, \
-    NUM_CLASSES_IN_MODEL, CROPPED_BY_CLASS_ROOT, ARCHIVE_ROOT, FORMAT
+    NUM_CLASSES_IN_MODEL, CROPPED_BY_CLASS_ROOT, ARCHIVE_ROOT, FORMAT, LABELS
 from utils import util
-
-LABELS = {
-    'no_mask': 0,
-    'mask': 1,
-    'incorrect': 2
-    }
 
 def separateByClass():
     """
