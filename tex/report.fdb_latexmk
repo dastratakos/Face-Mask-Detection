@@ -1,21 +1,21 @@
 # Fdb version 3
-["bibtex report"] 1605772792 "report.aux" "report.bbl" "report" 1605772793
+["bibtex report"] 1605772792 "report.aux" "report.bbl" "report" 1605774268
   "/usr/local/texlive/2019/texmf-dist/bibtex/bst/base/unsrt.bst" 1292289607 18030 1376b4b231b50c66211e47e42eda2875 ""
   "references.bib" 1605769302 7666 cd051b100447cf3427e177f3c34cb7d0 ""
-  "report.aux" 1605772793 2562 b181537ec896ceeed9d35be10bc6cc06 "pdflatex"
+  "report.aux" 1605774268 2562 b181537ec896ceeed9d35be10bc6cc06 "pdflatex"
   (generated)
   "report.bbl"
   "report.blg"
-["pdflatex"] 1605772792 "/Users/deanstratakos/Documents/Stanford/2020-2021 Junior Year/1 Autumn/CS 229/Project/Face-Mask-Detection/tex/report.tex" "/Users/deanstratakos/Documents/Stanford/2020-2021 Junior Year/1 Autumn/CS 229/Project/Face-Mask-Detection/tex/report.pdf" "report" 1605772793
+["pdflatex"] 1605774267 "/Users/deanstratakos/Documents/Stanford/2020-2021 Junior Year/1 Autumn/CS 229/Project/Face-Mask-Detection/tex/report.tex" "/Users/deanstratakos/Documents/Stanford/2020-2021 Junior Year/1 Autumn/CS 229/Project/Face-Mask-Detection/tex/report.pdf" "report" 1605774268
   "../images/data.png" 1605765038 202963 43596ea6c9d8b6e9e1bc5f1e9f956c6a ""
   "../results/logreg/confusion_matrix.png" 1605764621 22467 8513bda6179f811dc2a30e05bf18064d ""
   "../results/resnet50/pretrained/confusion_matrix.png" 1605772059 26878 795db002117464212bf8bbd510dcd2c9 ""
   "../results/svm/linear/confusion_matrix.png" 1605764645 21834 f50678900550978e90ca66d28e97cede ""
   "../results/svm/poly/confusion_matrix.png" 1605764653 21302 ac774952a2c86a6fecadb3730b542903 ""
   "../results/svm/rbf/confusion_matrix.png" 1605764661 20796 0ce4ac81803664106e64224b5b867202 ""
-  "/Users/deanstratakos/Documents/Stanford/2020-2021 Junior Year/1 Autumn/CS 229/Project/Face-Mask-Detection/tex/report.aux" 1605772793 2562 b181537ec896ceeed9d35be10bc6cc06 ""
-  "/Users/deanstratakos/Documents/Stanford/2020-2021 Junior Year/1 Autumn/CS 229/Project/Face-Mask-Detection/tex/report.tex" 1605772790 16408 91ba91aa9b9ada7e3aa48825947c5072 ""
-  "/dev/null" 1605772750 0 d41d8cd98f00b204e9800998ecf8427e ""
+  "/Users/deanstratakos/Documents/Stanford/2020-2021 Junior Year/1 Autumn/CS 229/Project/Face-Mask-Detection/tex/report.aux" 1605774268 2562 b181537ec896ceeed9d35be10bc6cc06 ""
+  "/Users/deanstratakos/Documents/Stanford/2020-2021 Junior Year/1 Autumn/CS 229/Project/Face-Mask-Detection/tex/report.tex" 1605774266 16407 704ec122e3ab8112af78a1689f604645 ""
+  "/dev/null" 1605774257 0 d41d8cd98f00b204e9800998ecf8427e ""
   "/usr/local/texlive/2019/texmf-dist/fonts/enc/dvips/base/8r.enc" 1165713224 4850 80dc9bab7f31fb78a000ccfed0e27cab ""
   "/usr/local/texlive/2019/texmf-dist/fonts/enc/dvips/cm-super/cm-super-t1.enc" 1136849721 2971 def0b6c1f0b107b3b936def894055589 ""
   "/usr/local/texlive/2019/texmf-dist/fonts/map/fontname/texfonts.map" 1511824771 3332 103109f5612ad95229751940c61aada0 ""
@@ -121,14 +121,14 @@
   "/usr/local/texlive/2019/texmf-var/web2c/pdftex/pdflatex.fmt" 1557342086 4259635 562fc36ec496993777a6c428d8bfb811 ""
   "/usr/local/texlive/2019/texmf.cnf" 1557341546 577 d150fef99ac436ad1156e86b0892f6ef ""
   "neurips_2019.sty" 1605764596 10440 1b91774795e66c6cd3dfff47f4126fa0 ""
-  "report.aux" 1605772793 2562 b181537ec896ceeed9d35be10bc6cc06 "pdflatex"
+  "report.aux" 1605774268 2562 b181537ec896ceeed9d35be10bc6cc06 "pdflatex"
   "report.bbl" 1605772792 1799 253e45934df261a641ecc70096356c76 "bibtex report"
-  "report.out" 1605772793 424 365938f60f4ba746eceee41cce068ce2 "pdflatex"
-  "report.tex" 1605772790 16408 91ba91aa9b9ada7e3aa48825947c5072 ""
+  "report.out" 1605774268 424 365938f60f4ba746eceee41cce068ce2 "pdflatex"
+  "report.tex" 1605774266 16407 704ec122e3ab8112af78a1689f604645 ""
   (generated)
   "report.pdf"
-  "report.aux"
-  "/Users/deanstratakos/Documents/Stanford/2020-2021 Junior Year/1 Autumn/CS 229/Project/Face-Mask-Detection/tex/report.pdf"
   "report.out"
+  "/Users/deanstratakos/Documents/Stanford/2020-2021 Junior Year/1 Autumn/CS 229/Project/Face-Mask-Detection/tex/report.pdf"
   "report.log"
+  "report.aux"
   "/Users/deanstratakos/Documents/Stanford/2020-2021 Junior Year/1 Autumn/CS 229/Project/Face-Mask-Detection/tex/report.log"

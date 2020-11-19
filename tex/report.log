@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019) (preloaded format=pdflatex 2019.5.8)  18 NOV 2020 23:59
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019) (preloaded format=pdflatex 2019.5.8)  19 NOV 2020 00:24
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -517,21 +517,21 @@ Package xcolor Info: Model `wave' substituted by `hsb' on input line 1371.
 ) (/Users/deanstratakos/Documents/Stanford/2020-2021 Junior Year/1 Autumn/CS 229/Project/Face-Mask-Detection/tex/report.aux)
 \openout1 = `report.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 48.
-LaTeX Font Info:    ... okay on input line 48.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 48.
-LaTeX Font Info:    ... okay on input line 48.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 48.
-LaTeX Font Info:    ... okay on input line 48.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 48.
-LaTeX Font Info:    ... okay on input line 48.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 48.
-LaTeX Font Info:    ... okay on input line 48.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 48.
-LaTeX Font Info:    ... okay on input line 48.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 48.
-LaTeX Font Info:    ... okay on input line 48.
-LaTeX Font Info:    Try loading font information for T1+ptm on input line 48.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 47.
+LaTeX Font Info:    ... okay on input line 47.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 47.
+LaTeX Font Info:    ... okay on input line 47.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 47.
+LaTeX Font Info:    ... okay on input line 47.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 47.
+LaTeX Font Info:    ... okay on input line 47.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 47.
+LaTeX Font Info:    ... okay on input line 47.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 47.
+LaTeX Font Info:    ... okay on input line 47.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 47.
+LaTeX Font Info:    ... okay on input line 47.
+LaTeX Font Info:    Try loading font information for T1+ptm on input line 47.
  (/usr/local/texlive/2019/texmf-dist/tex/latex/psnfss/t1ptm.fd
 File: t1ptm.fd 2001/06/04 font definitions for T1/ptm.
 )
@@ -629,7 +629,7 @@ Package grfext Info: Graphics extension search list:
 File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Live
 ))
 \AtBeginShipoutBox=\box52
-Package hyperref Info: Link coloring OFF on input line 48.
+Package hyperref Info: Link coloring OFF on input line 47.
  (/usr/local/texlive/2019/texmf-dist/tex/latex/hyperref/nameref.sty
 Package: nameref 2016/05/21 v2.44 Cross-referencing by name of section
  (/usr/local/texlive/2019/texmf-dist/tex/generic/oberdiek/gettitlestring.sty
@@ -637,14 +637,14 @@ Package: gettitlestring 2016/05/16 v1.5 Cleanup title references (HO)
 )
 \c@section@level=\count292
 )
-LaTeX Info: Redefining \ref on input line 48.
-LaTeX Info: Redefining \pageref on input line 48.
-LaTeX Info: Redefining \nameref on input line 48.
+LaTeX Info: Redefining \ref on input line 47.
+LaTeX Info: Redefining \pageref on input line 47.
+LaTeX Info: Redefining \nameref on input line 47.
  (/Users/deanstratakos/Documents/Stanford/2020-2021 Junior Year/1 Autumn/CS 229/Project/Face-Mask-Detection/tex/report.out) (/Users/deanstratakos/Documents/Stanford/2020-2021 Junior Year/1 Autumn/CS 229/Project/Face-Mask-Detection/tex/report.out)
 \@outlinefile=\write3
 \openout3 = `report.out'.
 
-LaTeX Info: Redefining \microtypecontext on input line 48.
+LaTeX Info: Redefining \microtypecontext on input line 47.
 Package microtype Info: Generating PDF output.
 Package microtype Info: Character protrusion enabled (level 2).
 Package microtype Info: Using default protrusion set `alltext'.
@@ -658,27 +658,27 @@ Package microtype Info: No adjustment of character kerning.
 File: mt-ptm.cfg 2006/04/20 v1.7 microtype config. file: Times (RS)
 )
 LaTeX Font Info:    Font shape `T1/ptm/bx/n' in size <17.28> not available
-(Font)              Font shape `T1/ptm/b/n' tried instead on input line 51.
+(Font)              Font shape `T1/ptm/b/n' tried instead on input line 50.
 LaTeX Font Info:    Font shape `T1/ptm/bx/n' in size <9> not available
-(Font)              Font shape `T1/ptm/b/n' tried instead on input line 51.
+(Font)              Font shape `T1/ptm/b/n' tried instead on input line 50.
  (/usr/local/texlive/2019/texmf-dist/tex/latex/microtype/mt-cmr.cfg
 File: mt-cmr.cfg 2013/05/19 v2.2 microtype config. file: Computer Modern Roman (RS)
 )
-LaTeX Font Info:    Try loading font information for U+msa on input line 51.
+LaTeX Font Info:    Try loading font information for U+msa on input line 50.
  (/usr/local/texlive/2019/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 ) (/usr/local/texlive/2019/texmf-dist/tex/latex/microtype/mt-msa.cfg
 File: mt-msa.cfg 2006/02/04 v1.1 microtype config. file: AMS symbols (a) (RS)
 )
-LaTeX Font Info:    Try loading font information for U+msb on input line 51.
+LaTeX Font Info:    Try loading font information for U+msb on input line 50.
  (/usr/local/texlive/2019/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 ) (/usr/local/texlive/2019/texmf-dist/tex/latex/microtype/mt-msb.cfg
 File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
 )
 LaTeX Font Info:    Font shape `T1/ptm/bx/n' in size <10> not available
-(Font)              Font shape `T1/ptm/b/n' tried instead on input line 51.
-LaTeX Font Info:    Try loading font information for T1+cmtt on input line 51.
+(Font)              Font shape `T1/ptm/b/n' tried instead on input line 50.
+LaTeX Font Info:    Try loading font information for T1+cmtt on input line 50.
  (/usr/local/texlive/2019/texmf-dist/tex/latex/base/t1cmtt.fd
 File: t1cmtt.fd 2014/09/29 v2.5h Standard LaTeX font definitions
 )
@@ -687,7 +687,7 @@ Package microtype Info: Loading generic protrusion settings for font family
 (microtype)             For optimal results, create family-specific settings.
 (microtype)             See the microtype manual for details.
 LaTeX Font Info:    Font shape `T1/ptm/bx/n' in size <12> not available
-(Font)              Font shape `T1/ptm/b/n' tried instead on input line 52.
+(Font)              Font shape `T1/ptm/b/n' tried instead on input line 51.
  [1
 
 
@@ -695,51 +695,51 @@ LaTeX Font Info:    Font shape `T1/ptm/bx/n' in size <12> not available
 <../images/data.png, id=61, 594.22pt x 164.615pt>
 File: ../images/data.png Graphic file (type png)
 <use ../images/data.png>
-Package pdftex.def Info: ../images/data.png  used on input line 70.
+Package pdftex.def Info: ../images/data.png  used on input line 69.
 (pdftex.def)             Requested size: 289.07999pt x 80.08684pt.
  [2 <../images/data.png>]
 <../results/logreg/confusion_matrix.png, id=83, 462.528pt x 346.896pt>
 File: ../results/logreg/confusion_matrix.png Graphic file (type png)
 <use ../results/logreg/confusion_matrix.png>
-Package pdftex.def Info: ../results/logreg/confusion_matrix.png  used on input line 132.
+Package pdftex.def Info: ../results/logreg/confusion_matrix.png  used on input line 131.
 (pdftex.def)             Requested size: 198.7425pt x 149.0565pt.
 <../results/svm/linear/confusion_matrix.png, id=84, 462.528pt x 346.896pt>
 File: ../results/svm/linear/confusion_matrix.png Graphic file (type png)
 <use ../results/svm/linear/confusion_matrix.png>
-Package pdftex.def Info: ../results/svm/linear/confusion_matrix.png  used on input line 133.
+Package pdftex.def Info: ../results/svm/linear/confusion_matrix.png  used on input line 132.
 (pdftex.def)             Requested size: 198.7425pt x 149.0565pt.
 <../results/svm/rbf/confusion_matrix.png, id=85, 462.528pt x 346.896pt>
 File: ../results/svm/rbf/confusion_matrix.png Graphic file (type png)
 <use ../results/svm/rbf/confusion_matrix.png>
-Package pdftex.def Info: ../results/svm/rbf/confusion_matrix.png  used on input line 134.
+Package pdftex.def Info: ../results/svm/rbf/confusion_matrix.png  used on input line 133.
 (pdftex.def)             Requested size: 198.7425pt x 149.0565pt.
 <../results/svm/poly/confusion_matrix.png, id=86, 462.528pt x 346.896pt>
 File: ../results/svm/poly/confusion_matrix.png Graphic file (type png)
 <use ../results/svm/poly/confusion_matrix.png>
-Package pdftex.def Info: ../results/svm/poly/confusion_matrix.png  used on input line 135.
+Package pdftex.def Info: ../results/svm/poly/confusion_matrix.png  used on input line 134.
 (pdftex.def)             Requested size: 198.7425pt x 149.0565pt.
 <../results/resnet50/pretrained/confusion_matrix.png, id=87, 462.528pt x 346.896pt>
 File: ../results/resnet50/pretrained/confusion_matrix.png Graphic file (type png)
 <use ../results/resnet50/pretrained/confusion_matrix.png>
-Package pdftex.def Info: ../results/resnet50/pretrained/confusion_matrix.png  used on input line 136.
+Package pdftex.def Info: ../results/resnet50/pretrained/confusion_matrix.png  used on input line 135.
 (pdftex.def)             Requested size: 198.7425pt x 149.0565pt.
  [3] [4 <../results/logreg/confusion_matrix.png> <../results/svm/linear/confusion_matrix.png> <../results/svm/rbf/confusion_matrix.png> <../results/svm/poly/confusion_matrix.png> <../results/resnet50/pretrained/confusion_matrix.png>]
-LaTeX Font Info:    Try loading font information for OMS+ptm on input line 155.
+LaTeX Font Info:    Try loading font information for OMS+ptm on input line 154.
  (/usr/local/texlive/2019/texmf-dist/tex/latex/psnfss/omsptm.fd
 File: omsptm.fd 
 )
 LaTeX Font Info:    Font shape `OMS/ptm/m/n' in size <10> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 155.
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 154.
  (/Users/deanstratakos/Documents/Stanford/2020-2021 Junior Year/1 Autumn/CS 229/Project/Face-Mask-Detection/tex/report.bbl [5])
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 182.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 181.
  [6]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 182.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 181.
  (/Users/deanstratakos/Documents/Stanford/2020-2021 Junior Year/1 Autumn/CS 229/Project/Face-Mask-Detection/tex/report.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 182.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 182.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 181.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 181.
 Package rerunfilecheck Info: File `report.out' has not changed.
 (rerunfilecheck)             Checksum: 365938F60F4BA746ECEEE41CCE068CE2;424.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 182.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 181.
  ) 
 Here is how much of TeX's memory you used:
  19976 strings out of 492616

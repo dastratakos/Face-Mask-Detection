@@ -14,8 +14,8 @@ from config import FORMAT
 from utils import util
 
 from models import logreg
-# from models import resNetPretrained
-# from models import resNetUntrained
+from models import resNetPretrained
+from models import resNetUntrained
 from models import svm
 
 def parse_args() -> dict:
