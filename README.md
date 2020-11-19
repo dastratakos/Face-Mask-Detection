@@ -7,6 +7,7 @@
 
 <div align="center">
   <h1 align="center">Face Mask Detection</h1>
+  <h3 align="center">November 18th, 2020</h3>
 
   <p align="center">
     A machine learning model for a <a href="http://cs229.stanford.edu">CS 229</a> final project
