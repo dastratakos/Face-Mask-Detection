@@ -10,13 +10,26 @@ import os
 
 import matplotlib.pyplot as plt
 import numpy as np
+import pandas as pd
 from PIL import Image
 import scikitplot as skplt
 from sklearn.metrics import balanced_accuracy_score, confusion_matrix, roc_auc_score
 from sklearn.model_selection import train_test_split
+import seaborn as sn
 from tqdm import tqdm
 
 from config import LABELS, RESULTS_ROOT
+
+def create_confusion_matrix():
+    # confusion matrix for pretrained ResNet50
+    array = [[81,76,32],[78,77,42],[50,46,18]]
+
+    df_cm = pd.DataFrame(array, range(3), range(3))
+    sn.set(font_scale=1.4) # for label size
+    sn.heatmap(df_cm, annot=True, annot_kws={"size": 16})
+
+    plt.title('Pretrained ResNet50 Confusion Matrix')
+    plt.savefig('confusion_matrix.png')
 
 def run_metrics(clf, X_test, y_test, dir_name, model_name, include_date=False,
                 interactive=False):

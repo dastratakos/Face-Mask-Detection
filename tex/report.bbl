@@ -1,0 +1,47 @@
+\begin{thebibliography}{1}
+
+\bibitem{LOEY2021108288}
+Mohamed Loey, Gunasekaran Manogaran, Mohamed Hamed~N. Taha, and Nour Eldeen~M.
+  Khalifa.
+\newblock A hybrid deep transfer learning model with machine learning methods
+  for face mask detection in the era of the covid-19 pandemic.
+\newblock {\em Measurement}, 167:108288, 2021.
+
+\bibitem{10.1145/2647868.2654970}
+Hokuto Kagaya, Kiyoharu Aizawa, and Makoto Ogawa.
+\newblock Food detection and recognition using convolutional neural network.
+\newblock In {\em Proceedings of the 22nd ACM International Conference on
+  Multimedia}, MM '14, page 1085–1088, New York, NY, USA, 2014. Association
+  for Computing Machinery.
+
+\bibitem{554195}
+S.~{Lawrence}, C.~L. {Giles}, {Ah Chung Tsoi}, and A.~D. {Back}.
+\newblock Face recognition: a convolutional neural-network approach.
+\newblock {\em IEEE Transactions on Neural Networks}, 8(1):98--113, 1997.
+
+\bibitem{10.1145/3065386}
+Alex Krizhevsky, Ilya Sutskever, and Geoffrey~E. Hinton.
+\newblock Imagenet classification with deep convolutional neural networks.
+\newblock {\em Commun. ACM}, 60(6):84–90, May 2017.
+
+\bibitem{Hijazi2015UsingCN}
+S.~Hijazi, R.~Kumar, and C.~Rowen.
+\newblock Using convolutional neural networks for image recognition by.
+\newblock 2015.
+
+\bibitem{Fu_2017_CVPR}
+Jianlong Fu, Heliang Zheng, and Tao Mei.
+\newblock Look closer to see better: Recurrent attention convolutional neural
+  network for fine-grained image recognition.
+\newblock In {\em Proceedings of the IEEE Conference on Computer Vision and
+  Pattern Recognition (CVPR)}, July 2017.
+
+\bibitem{dataset}
+Larxel.
+\newblock Face mask detection, 05 2020.
+
+\bibitem{he2015deep}
+Kaiming He, Xiangyu Zhang, Shaoqing Ren, and Jian Sun.
+\newblock Deep residual learning for image recognition, 2015.
+
+\end{thebibliography}
