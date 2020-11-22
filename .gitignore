@@ -1,12 +1,19 @@
 # Byte-compiled / optimized / DLL files
 __pycache__/
+__init__.py
 *.py[cod]
 *$py.class
 .idea*
 .DS_Store
 .idea/
-__init__.py
 *.egg-info
+
 # Dataset
 archive/
-__init__.py
+
+# Tex files
+tex/*
+!tex/neurips_2019.sty
+!tex/references.bib
+!tex/report.pdf
+!tex/report.tex
