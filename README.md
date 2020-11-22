@@ -51,24 +51,12 @@ git clone https://github.com/dastratakos/Face-Mask-Detection.git
 pip install -r requirements.txt
 ```
 
-### Preprocessing the dataset
-
-1. Download dataset from [Kaggle](https://www.kaggle.com/andrewmvd/face-mask-detection) into the `Face-Mask-Detection` directory.
-2. Crop the images.
-```sh
-python data_preprocessing/crop.py
-```
-3. Balance the dataset
-```sh
-python data_preprocessing/balance.py
-```
-
 <!-- USAGE EXAMPLES -->
 ## Usage
 
-1. Run the pipeline and pass in the model to run. For example:
+1. Run the pipeline and pass in the model to run. Note that this pipeline will run the data preprocessing if it has not been done yet. For example:
 ```sh
-python run_pipeline.py SVM
+python run_pipeline.py -m SVM
 ```
 2. For ResNet models, it is recommended to use a VM through a platform such as GCP (Google Cloud Platform).
 
