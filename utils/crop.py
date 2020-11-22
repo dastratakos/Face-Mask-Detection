@@ -8,24 +8,22 @@ incorrect) are stored in a CSV file.
 It should take just over 30 seconds to process 853 images.
 """
 import argparse
-import csv
 import logging
 import os
 
 from PIL import Image
 from tqdm import tqdm
 
-from config import ARCHIVE_ROOT, IMAGE_ROOT, CROPPED_IMAGE_ROOT, FORMAT
-from data_processing import preprocess
+from config import ARCHIVE_ROOT, IMAGES_ROOT, CROPPED_ROOT, FORMAT, LABELS
 from utils import util
 
 CSV_FILE = ARCHIVE_ROOT + 'cropped_labels.csv'
 SCALE = 1.5
 DIM = 64
 NEW_LABELS = {
-    'without_mask': 0,
-    'with_mask': 1,
-    'mask_weared_incorrect': 2
+    'without_mask': 'no_mask',
+    'with_mask': 'mask',
+    'mask_weared_incorrect': 'incorrect'
     }
 
 def compute_crop_box(bound_box: dict):
@@ -65,26 +63,25 @@ def get_label(label: str) -> str:
 
 def main():
     logging.basicConfig(format=FORMAT, level=logging.INFO)
-    logging.info('========== Cropping Module ==========')
-    os.makedirs(ARCHIVE_ROOT + 'cropped', exist_ok=True)
+    logging.info('========== Cropping original images ==========')
+    os.makedirs(CROPPED_ROOT)
 
-    image_bases, annotations = preprocess.main()
+    for label in LABELS:
+        os.makedirs(CROPPED_ROOT + label)
+
+    image_bases, annotations = util.get_original_data()
 
     with open(CSV_FILE, 'w') as f:
-        csv_file = csv.writer(f)
-        csv_file.writerow(['image id', 'face_id', 'label'])
-        print(f'Finding faces in {len(image_bases)} images')
+        print(f'Finding faces in {len(image_bases)} images...')
         with tqdm(total=len(image_bases)) as progress_bar:
             for image_id, (image_base, annotation) in enumerate(zip(image_bases, annotations)):
-                im = Image.open(IMAGE_ROOT + image_base)
+                im = Image.open(IMAGES_ROOT + image_base)
                 for face_id, object in enumerate(annotation['objects']):
                     crop_box = compute_crop_box(object['bndbox'])
                     cropped_image = im.crop(crop_box).resize((DIM, DIM))
-                    cropped_image.save(CROPPED_IMAGE_ROOT +
-                                        f'image-{image_id}-{face_id}.png')
-                    csv_file.writerow([image_id, face_id, get_label(object['name'])])
+                    cropped_image.save(CROPPED_ROOT + get_label(object['name']) +
+                                       '/' + f'image-{image_id}-{face_id}.png')
                 progress_bar.update()
-    preprocess.createImageClassesFolder()
 
 if __name__ == '__main__':
     arg_parser = argparse.ArgumentParser(

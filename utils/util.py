@@ -7,6 +7,7 @@ from datetime import datetime
 import json
 import logging
 import os
+import xml.etree.ElementTree as ET
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -16,9 +17,10 @@ import scikitplot as skplt
 from sklearn.metrics import balanced_accuracy_score, confusion_matrix, roc_auc_score
 from sklearn.model_selection import train_test_split
 import seaborn as sn
+import tensorflow as tf
 from tqdm import tqdm
 
-from config import LABELS, RESULTS_ROOT
+from config import ANNOTATIONS_ROOT, IMAGES_ROOT, RESULTS_ROOT, LABELS
 
 def create_confusion_matrix():
     # confusion matrix for pretrained ResNet50
@@ -29,9 +31,34 @@ def create_confusion_matrix():
     sn.heatmap(df_cm, annot=True, annot_kws={"size": 16})
 
     plt.title('Pretrained ResNet50 Confusion Matrix')
-    plt.savefig('confusion_matrix.png')
+    plt.savefig(RESULTS_ROOT + 'resnet50/pretrained/confusion_matrix.png')
 
-def run_metrics(clf, X_test, y_test, dir_name, model_name, include_date=False,
+def run_resnet_metrics(dir_name, note, model, test_set, labels, include_date=False):
+    scores = model.predict(test_set)
+    predictions = tf.argmax(input=scores, axis=1).numpy()
+
+    metrics = {
+        'Model evaluation (loss, metrics)': model.evaluate(test_set),
+        'Balanced Accuracy': balanced_accuracy_score(labels, predictions),
+        'Confusion Matrix': confusion_matrix(labels, predictions).tolist(),
+        'ROC AUC Score': roc_auc_score(labels, scores, multi_class="ovr")
+    }
+
+    OUTPUT_DIR = RESULTS_ROOT + dir_name
+    if include_date:
+        OUTPUT_DIR += datetime.now().strftime('%y-%m-%d--%H-%M-%S') + '/'
+    os.makedirs(OUTPUT_DIR, exist_ok=True)
+    
+    # write metrics to output file
+    filename = f'metrics.json'
+    with open(OUTPUT_DIR + filename, 'r+') as f:
+        data = json.load(f)
+        data[note] = metrics
+        f.seek(0)               # should reset file position to the beginning.
+        json.dump(data, f, indent=4)
+        f.truncate()            # remove remaining part
+
+def run_baseline_metrics(clf, X_test, y_test, dir_name, model_name, include_date=False,
                 interactive=False):
     y_pred = clf.predict(X_test)
     y_prob_a = clf.predict_proba(X_test)
@@ -50,6 +77,11 @@ def run_metrics(clf, X_test, y_test, dir_name, model_name, include_date=False,
     if include_date:
         OUTPUT_DIR += datetime.now().strftime('%y-%m-%d--%H-%M-%S') + '/'
     os.makedirs(OUTPUT_DIR, exist_ok=True)
+    
+    # write metrics to output file
+    filename = f'metrics.json'
+    with open(OUTPUT_DIR + filename, 'w') as f:
+        json.dump(metrics, f, indent=4)
 
     # plot Confusion Matrix
     skplt.metrics.plot_confusion_matrix(y_test, y_pred,
@@ -62,11 +94,6 @@ def run_metrics(clf, X_test, y_test, dir_name, model_name, include_date=False,
     if interactive: plt.show()
     plt.savefig(OUTPUT_DIR + 'ROC_curves.png')
 
-    # write metrics to output file
-    filename = f'metrics.json'
-    with open(OUTPUT_DIR + filename, 'w') as f:
-        json.dump(metrics, f)
-
 def get_image_bases(image_root: str) -> list:
     """ Returns a list of sorted image_bases contained in the image_root. The
     image_bases are sorted by the image id, then face id, then augment id.
@@ -74,47 +101,31 @@ def get_image_bases(image_root: str) -> list:
     return list(sorted(os.listdir(image_root), key=lambda x: tuple(
         int(x.split('.')[0].split('-')[i]) for i in range(1, len(x.split('-'))))))
 
-def load_dataset_from_split(image_root: str):
+def get_num_images() -> int:
+    return len(os.listdir(IMAGES_ROOT))
+
+def load_dataset(image_root: str):
+    """Load dataset from directory where images are split up by class.
+
+    Args:
+         image_root: Root folder of the cropped and separated images.
+
+    Returns:
+        X_train, X_test, y_train, y_test
+    """
     X = []
     y = []
 
-    for i, label in enumerate(list(LABELS.keys())):
+    labels = [x for x in os.listdir(image_root) if x[0] != '.']
+
+    for label in labels:
         image_bases = get_image_bases(image_root + label)
         logging.info(f'Loading {len(image_bases)} images ({label})...')
         for image_base in tqdm(image_bases):
             im = np.array(Image.open(image_root + label + '/' + image_base))[:,:,:3]
             im = np.average(im.reshape(im.shape[0]**2, 3), axis=1)
             X.append(im)
-            y.append(i)
-
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.1, random_state=42)
-    return X_train, X_test, y_train, y_test
-
-def load_dataset(csv_path: str, image_root: str):
-    """Load dataset from a CSV file.
-
-    Args:
-         csv_path: Path to CSV file containing dataset.
-         image_root: Root folder of the images corresponding to the CSV file.
-
-    Returns:
-        X_train, X_test, y_train, y_test
-    """
-
-    image_bases = get_image_bases(image_root)
-
-    logging.info(f'Loading {len(image_bases)} images...')
-    X = []
-    for image_base in tqdm(image_bases):
-        """ Load the image as a numpy array. Then, reshape it to be a vector
-        of dimension equal to the total number of pixels, while converting it
-        to grayscale by taking the average the RGB values. Index slicing is
-        used to remove the 4th pixel value (alpha) if needed. """
-        im = np.array(Image.open(image_root + image_base))[:,:,:3]
-        im = np.average(im.reshape(im.shape[0]**2, 3), axis=1)
-        X.append(im)
-
-    y = [int(x) for x in np.loadtxt(csv_path, delimiter=',', skiprows=1, usecols=[-1])]
+            y.append(LABELS[label])
 
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.1, random_state=42)
     return X_train, X_test, y_train, y_test
@@ -125,7 +136,7 @@ def build_description(title: str) -> str:
         '',
         'Charles Pan, Gilbert Rosal, & Dean Stratakos',
         'CS 229: Machine Learning',
-        'October 20, 2020'
+        'November 18, 2020'
     ]
 
     max_length = max(len(l) for l in lines)
@@ -139,3 +150,50 @@ def build_description(title: str) -> str:
     description += f'{bar}'
 
     return description
+
+def parseXML(xml_filename: str) -> dict:
+    """ This function generates an annotation dictionary representation of
+    the contents of the specified XML filename.
+
+    Args:
+        xml_filename (str): Relative path to the XML file
+
+    Returns:
+        annotation (dict): Fepresentation of the entire XML file
+    """
+    tree = ET.parse(xml_filename)
+    root = tree.getroot()
+    annotation = {'objects': []}
+    for item in root.findall('./'):
+        if item.tag == 'size':
+            annotation['size'] = {dim.tag:dim.text for dim in item}
+        elif item.tag == 'object':
+            annotation['objects'].append(
+                {child.tag:(child.text if child.tag != 'bndbox'
+                    else {c.tag:c.text for c in child})
+                for child in item})
+        else:
+            annotation[item.tag] = item.text             
+    return annotation
+
+def get_original_data():
+    """ Collects all of the images and annotations from the archive directory.
+    Converts the annotation XML files to a list of dictionaries.
+
+    Returns:
+        image_bases ([str]): List of the filenames for all images
+        annotations ([dict]): List of the parsed annotations
+    """
+    # sort by the image id (i.e. maksssksksss[image id].png)
+    image_bases = list(sorted(os.listdir(IMAGES_ROOT),
+                              key=lambda x: int(x[12:-4])))
+    annotations = list(sorted(os.listdir(ANNOTATIONS_ROOT),
+                              key=lambda x: int(x[12:-4])))
+    assert len(image_bases) == len(annotations), \
+        f'Number of images ({len(image_bases)}) does not match the number of \
+        annotations ({len(annotations)})'
+    
+    annotations = [parseXML(ANNOTATIONS_ROOT + annotation)
+                    for annotation in annotations]
+
+    return image_bases, annotations

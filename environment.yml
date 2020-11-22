@@ -4,11 +4,12 @@ channels:
 dependencies:
   - matplotlib=2.2.2
   - numpy=1.15.0
+  - opencv-python
+  - Pillow
   - pip=10.0.1
   - python=3.6.6
-  - scipy
-  - Pillow
-  - tqdm
   - scikit-image
-  - torch
+  - scipy
   - sklearn
+  - tensorflow
+  - tqdm

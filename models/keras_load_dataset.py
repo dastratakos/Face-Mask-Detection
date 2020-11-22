@@ -22,8 +22,8 @@ def splitGroups(dataset, train_split, val_split, test_split):
     val_dataset = rest_dataset.take(val_size)
     test_dataset = rest_dataset.skip(val_size)
 
-    print("Number of training samples: %d" % tf.data.experimental.cardinality(train_dataset))
-    print("Number of validation samples: %d" % tf.data.experimental.cardinality(val_dataset))
-    print("Number of test samples: %d" % tf.data.experimental.cardinality(test_dataset))
+    print(f'Number of training samples: {tf.data.experimental.cardinality(train_dataset)}')
+    print(f'Number of validation samples: {tf.data.experimental.cardinality(val_dataset)}')
+    print(f'Number of test samples: {tf.data.experimental.cardinality(test_dataset)}')
 
     return train_dataset, val_dataset, test_dataset

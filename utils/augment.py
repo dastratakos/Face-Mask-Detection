@@ -51,7 +51,7 @@ from skimage.exposure import rescale_intensity
 from skimage.exposure import adjust_gamma, adjust_log, adjust_sigmoid
 from tqdm import tqdm
 
-from config import ARCHIVE_ROOT, CROPPED_IMAGE_ROOT, AUGMENTED_IMAGE_ROOT, FORMAT
+from config import ARCHIVE_ROOT, CROPPED_ROOT, AUGMENTED_ROOT, FORMAT, LABELS
 from utils import util
 
 CSV_FILE = ARCHIVE_ROOT + 'augmented_labels.csv'
@@ -113,7 +113,7 @@ def test_all_transformations(image_base):
 
     augmented_base = AUGMENTED_IMAGE_TEST_ROOT + image_base[:-4]
 
-    im = io.imread(CROPPED_IMAGE_ROOT + image_base)
+    im = io.imread(CROPPED_ROOT + image_base)
     io.imsave(f'{augmented_base}-original.png', im)
     
     all_transformations = TRANSFORMATIONS + UNUSED
@@ -134,35 +134,38 @@ def augment_image(im, num_transformations=2):
 def main():
     logging.basicConfig(format=FORMAT, level=logging.INFO)
     logging.info('========== Augmenting Module ==========')
-    os.makedirs(ARCHIVE_ROOT + 'augmented', exist_ok=True)
+    os.makedirs(AUGMENTED_ROOT, exist_ok=True)
 
-    # labels = {'[image id]-[face id]': label for each line}
-    with open(ARCHIVE_ROOT + 'cropped_labels.csv') as f:
-        labels = {f'{line[0]}-{line[1]}': int(line[2])
-                    for line in csv.reader(f) if line[0].isnumeric()}
+    os.makedirs(CROPPED_ROOT)
 
-    image_bases = util.get_image_bases(CROPPED_IMAGE_ROOT)
+    for label in LABELS:
+        os.makedirs(CROPPED_ROOT + label)
 
     with open(CSV_FILE, 'w') as f:
         csv_file = csv.writer(f)
         csv_file.writerow(['image id', 'face_id', 'augment_id', 'label'])
-        logging.info(f'Augmenting {len(image_bases)} images')
-        with tqdm(total=len(image_bases)) as progress_bar:
-            for image_base in image_bases:
-                image_id, face_id = (int(image_base[:-4].split('-')[1]),
-                                     int(image_base[:-4].split('-')[2]))
-                label = labels[f'{image_id}-{face_id}']
-                augmented_base = AUGMENTED_IMAGE_ROOT + image_base[:-4]
+        
+        labels = [x for x in os.listdir(CROPPED_ROOT) if x[0] != '.']
 
-                im = io.imread(CROPPED_IMAGE_ROOT + image_base)
-                io.imsave(f'{augmented_base}-0.png', im)
-                csv_file.writerow([image_id, face_id, 0, label])
-                for augment_id in range(1, FACTOR):
-                    num_transformations = random.randint(1, 3)
-                    im2 = augment_image(im, num_transformations)
-                    io.imsave(f'{augmented_base}-{augment_id}.png', im2)
-                    csv_file.writerow([image_id, face_id, augment_id, label])
-                progress_bar.update()
+        for label in labels:
+            image_bases = util.get_image_bases(CROPPED_ROOT + label)
+            logging.info(f'Augmenting {len(image_bases)} images')
+            with tqdm(total=len(image_bases)) as progress_bar:
+                for image_base in image_bases:
+                    image_id, face_id = (int(image_base[:-4].split('-')[1]),
+                                        int(image_base[:-4].split('-')[2]))
+                    label = labels[f'{image_id}-{face_id}']
+                    augmented_base = AUGMENTED_ROOT + label + '/' + image_base[:-4]
+
+                    im = io.imread(CROPPED_ROOT + image_base)
+                    io.imsave(f'{augmented_base}-0.png', im)
+                    csv_file.writerow([image_id, face_id, 0, label])
+                    for augment_id in range(1, FACTOR):
+                        num_transformations = random.randint(1, 3)
+                        im2 = augment_image(im, num_transformations)
+                        io.imsave(f'{augmented_base}-{augment_id}.png', im2)
+                        csv_file.writerow([image_id, face_id, augment_id, LABELS[label]])
+                    progress_bar.update()
 
 if __name__ == '__main__':
     arg_parser = argparse.ArgumentParser(

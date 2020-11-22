@@ -7,16 +7,16 @@ import logging
 
 from keras_load_dataset import loadDataset, splitGroups
 import numpy as np
-from sklearn import metrics
 import tensorflow as tf
 from tensorflow import keras
 
-from config import BALANCED_IMAGE_ROOT, FORMAT
+from config import BALANCED_ROOT, FORMAT
+from utils import util
 
 IMG_HEIGHT = 64
 IMG_WIDTH = 64
 
-dataset_directory = BALANCED_IMAGE_ROOT
+dataset_directory = BALANCED_ROOT
 train_split = 0.8
 val_split = 0.1
 test_split = 0.1
@@ -68,21 +68,17 @@ def main():
         model.compile(
             optimizer=keras.optimizers.Adam(),
             loss=tf.keras.losses.SparseCategoricalCrossentropy(),
-            metrics=[tf.keras.metrics.SparseCategoricalAccuracy()]
+            # # metrics=[tf.keras.metrics.SparseCategoricalAccuracy()]
         )
 
-    f = open("pretrained-output.txt", "a")
-    f.write("BEFORE TRAINING EVALUATION")
-    f.write("MODEL EVALUATION (loss, metrics): " + str(model.evaluate(test_set)))
-    f.write("BALANCED ACCURACY: " + str(metrics.balanced_accuracy_score(labels, tf.argmax(input=model.predict(test_set), axis=1).numpy())))
+    util.run_resnet_metrics('resnet50/pretrained/', 'Before Training',
+        model, test_set, labels)
 
     epochs = 40
     model.fit(train_set, epochs=epochs, validation_data=val_set)
 
-    f = open("pretrained-output.txt", "a")
-    f.write("AFTER FINE TUNING EVALUATION")
-    f.write("MODEL EVALUATION (loss, metrics): " + str(model.evaluate(test_set)))
-    f.write("BALANCED ACCURACY: " + str(metrics.balanced_accuracy_score(labels, tf.argmax(input=model.predict(test_set), axis=1).numpy())))
+    util.run_resnet_metrics('resnet50/pretrained/', 'After Fine Tuning',
+        model, test_set, labels)
 
     with strategy.scope():
         # fine tune over the whole model
@@ -92,14 +88,13 @@ def main():
             loss=tf.keras.losses.SparseCategoricalCrossentropy(),
             metrics=[tf.keras.metrics.SparseCategoricalAccuracy()]
         )
+
         
     epochs = 20
     model.fit(train_set, epochs=epochs, validation_data=val_set)
 
-    f = open("pretrained-output.txt", "a")
-    f.write("AFTER TRAINING EVALUATION")
-    f.write("MODEL EVALUATION (loss, metrics): " + str(model.evaluate(test_set)))
-    f.write("BALANCED ACCURACY: " + str(metrics.balanced_accuracy_score(labels, tf.argmax(input=model.predict(test_set), axis=1).numpy())))
+    util.run_resnet_metrics('resnet50/pretrained/', 'After Full Model Training',
+        model, test_set, labels)
 
 if __name__ == '__main__':
     main()

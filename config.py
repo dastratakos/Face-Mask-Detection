@@ -1,19 +1,18 @@
 """
 file: config.py
 ---------------
-This file includes all of the high-level, hard-coded information.
-TODO: extend this file to be modified based on the command line arguments.
+File containing high-level constants.
 """
 
 ARCHIVE_ROOT = './archive/'
-ANNOTATION_ROOT = ARCHIVE_ROOT + 'annotations/'
-IMAGE_ROOT = ARCHIVE_ROOT + 'images/'
-CROPPED_IMAGE_ROOT = ARCHIVE_ROOT + 'cropped/'
-AUGMENTED_IMAGE_ROOT = ARCHIVE_ROOT + 'augmented/'
-CROPPED_BY_CLASS_ROOT = ARCHIVE_ROOT + 'cropped_by_class/'
-BALANCED_IMAGE_ROOT = ARCHIVE_ROOT + 'balanced/'
+ANNOTATIONS_ROOT = ARCHIVE_ROOT + 'annotations/'
+IMAGES_ROOT = ARCHIVE_ROOT + 'images/'
+CROPPED_ROOT = ARCHIVE_ROOT + 'cropped/'
+BALANCED_ROOT = ARCHIVE_ROOT + 'balanced/'
+VISUALIZATION_ROOT = ARCHIVE_ROOT + 'visualizations/'
+VISUALIZATION_TEST_ROOT = ARCHIVE_ROOT + 'visualizations_test/'
+AUGMENTED_ROOT = ARCHIVE_ROOT + 'augmented/'
 RESULTS_ROOT = './results/'
-NUM_CLASSES_IN_MODEL = 3
 
 # logging format
 FORMAT = '%(asctime)s %(levelname)s [%(filename)s:%(lineno)d] %(message)s'
@@ -23,6 +22,3 @@ LABELS = {
     'mask': 1,
     'incorrect': 2
     }
-
-# verbose = False
-# etc...

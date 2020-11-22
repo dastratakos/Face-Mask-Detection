@@ -11,12 +11,13 @@ from sklearn import metrics
 import tensorflow as tf
 from tensorflow import keras
 
-from config import BALANCED_IMAGE_ROOT, FORMAT
+from config import BALANCED_ROOT, FORMAT
+from utils import util
 
 IMG_HEIGHT = 64
 IMG_WIDTH = 64
 
-dataset_directory = BALANCED_IMAGE_ROOT
+dataset_directory = BALANCED_ROOT
 train_split = 0.8
 val_split = 0.1
 test_split = 0.1
@@ -71,18 +72,14 @@ def main():
             metrics=[tf.keras.metrics.SparseCategoricalAccuracy()]
         )
 
-    f = open("untrained-output.txt", "a")
-    f.write("BEFORE TRAINING EVALUATION")
-    f.write("MODEL EVALUATION (loss, metrics): " + str(model.evaluate(test_set)))
-    f.write("BALANCED ACCURACY: " + str(metrics.balanced_accuracy_score(labels, tf.argmax(input=model.predict(test_set), axis=1).numpy())))
+    util.run_resnet_metrics('resnet50/untrained/', 'Before Training',
+        model, test_set, labels)
 
     epochs = 20
     model.fit(train_set, epochs=epochs, validation_data=val_set)
 
-    f = open("untrained-output.txt", "a")
-    f.write("AFTER TRAINING EVALUATION")
-    f.write("MODEL EVALUATION (loss, metrics): " + str(model.evaluate(test_set)))
-    f.write("BALANCED ACCURACY: " + str(metrics.balanced_accuracy_score(labels, tf.argmax(input=model.predict(test_set), axis=1).numpy())))
+    util.run_resnet_metrics('resnet50/untrained/', 'After Training',
+        model, test_set, labels)
 
 if __name__ == '__main__':
     main()

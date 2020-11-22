@@ -9,8 +9,7 @@ from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
 from sklearn.svm import SVC
 
-from config import ARCHIVE_ROOT, BALANCED_IMAGE_ROOT, CROPPED_IMAGE_ROOT, \
-                   AUGMENTED_IMAGE_ROOT, FORMAT
+from config import ARCHIVE_ROOT, BALANCED_ROOT, CROPPED_ROOT, FORMAT
 from utils import util
 
 KERNELS = {
@@ -19,18 +18,12 @@ KERNELS = {
     'poly'
 }
 
-def main(csv_path:      str  = ARCHIVE_ROOT + 'augmented_labels.csv',
-         image_root:    str  = AUGMENTED_IMAGE_ROOT,
-         balanced_root: str  = BALANCED_IMAGE_ROOT,
-         use_balanced:  bool = True,
-         interactive:   bool = False):
+def main(balanced_root: str = BALANCED_ROOT, interactive: bool = False):
     logging.basicConfig(format=FORMAT, level=logging.INFO)
+    print()
     logging.info('========== Support Vector Machine ==========')
 
-    if use_balanced:
-        X_train, X_test, y_train, y_test = util.load_dataset_from_split(balanced_root)
-    else:
-        X_train, X_test, y_train, y_test = util.load_dataset(csv_path, image_root)
+    X_train, X_test, y_train, y_test = util.load_dataset(balanced_root)
 
     for kernel in KERNELS:
         logging.info(f'Kernel type: {kernel}')
@@ -38,8 +31,10 @@ def main(csv_path:      str  = ARCHIVE_ROOT + 'augmented_labels.csv',
         logging.info('\tFitting the model...')
         clf.fit(X_train, y_train)
 
-        util.run_metrics(clf, X_test, y_test, f'svm/{kernel}/',
-                         f'SVM ({kernel})', interactive)
+        util.run_baseline_metrics(clf, X_test, y_test, f'svm/{kernel}/',
+            f'SVM ({kernel})', interactive)
+    
+    print()
 
 if __name__ == '__main__':
-    main(ARCHIVE_ROOT + 'cropped_labels.csv', CROPPED_IMAGE_ROOT)
+    main(ARCHIVE_ROOT + 'cropped_labels.csv', CROPPED_ROOT)

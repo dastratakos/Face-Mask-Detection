@@ -9,14 +9,14 @@ setup(
     install_requires=[
         'matplotlib',
         'numpy',
+        'opencv-python',
+        'Pillow',
         'pip',
         'python',
-        'scipy',
-        'Pillow',
-        'tqdm',
         'scikit-image',
-        'torch',
+        'scipy',
         'sklearn',
-        'tensorflow'
+        'tensorflow',
+        'tqdm',
     ]
 )
